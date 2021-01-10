@@ -12,9 +12,13 @@ The `qberrors` package provides consistent error handling for Quickbase applicat
 
 ## Usage
 
+### Conventions
+
 * `Client` errors are the result of user input and should not be retried until the input is changed.
 * `Internal` errors are internal to the application and should not be retried until code is fixed.
 * `Service` errors are temporary problems that should be retried using a backoff algorithm.
+
+### Examples
 
 Standard errors are treated as `Internal` and unsafe for users to see.
 

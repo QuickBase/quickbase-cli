@@ -18,7 +18,7 @@ The Quickbase CLI consumes Quickbase's RESTful API, so the commands should feel 
 
 ## Installation
 
-Download the latest binary for you platform from the [Releases](https://github.com/QuickBase/quiickbase-cli/releases) section to a directory that i in your systems [PATH](https://en.wikipedia.org/wiki/PATH_(variable)).
+Download the latest binary for your platform from the [Releases](https://github.com/QuickBase/quiickbase-cli/releases) section to a directory that is in your system's [PATH](https://en.wikipedia.org/wiki/PATH_(variable)).
 
 ### Building From Source
 

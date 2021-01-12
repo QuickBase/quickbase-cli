@@ -37,7 +37,7 @@ func NewGlobalConfig(cmd *cobra.Command, cfg *viper.Viper) GlobalConfig {
 	flags.PersistentString(OptionDumpDirectory, "d", "", "directory for files that request/response are dumped to for debugging")
 	flags.PersistentString(OptionJMESPathFilter, "F", "", "JMESPath filter applied to output")
 	flags.PersistentString(OptionLogFile, "f", "", "file log messages are written to")
-	flags.PersistentString(OptionLogLevel, "l", cliutil.LogError, "minimum log level")
+	flags.PersistentString(OptionLogLevel, "l", cliutil.LogNotice, "minimum log level")
 	flags.PersistentString(qbclient.OptionProfile, "p", "default", "configuration profile")
 	flags.PersistentBool(OptionQuiet, "q", false, OptionQuietDescription)
 	flags.PersistentString(qbclient.OptionRealmHostname, "r", "", "realm hostname, e.g., example.quickbase.com")

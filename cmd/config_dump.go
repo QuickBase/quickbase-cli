@@ -6,11 +6,13 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// configDumpCmd represents the app command
 var configDumpCmd = &cobra.Command{
 	Use:   "dump",
 	Short: "Print the current configuration",
-	Args:  configDumpCmdValidate,
+
+	Args: func(cmd *cobra.Command, args []string) error {
+		return globalCfg.Validate()
+	},
 
 	Run: func(cmd *cobra.Command, args []string) {
 		ctx, logger, _ := qbcli.NewLogger(cmd, globalCfg)
@@ -30,8 +32,4 @@ var configDumpCmd = &cobra.Command{
 
 func init() {
 	configCmd.AddCommand(configDumpCmd)
-}
-
-func configDumpCmdValidate(cmd *cobra.Command, args []string) error {
-	return globalCfg.Validate()
 }

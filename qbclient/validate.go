@@ -1,5 +1,7 @@
 package qbclient
 
+// TODO Replace this file with https://github.com/go-playground/validator
+
 import (
 	"errors"
 	"fmt"

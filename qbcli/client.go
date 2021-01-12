@@ -18,7 +18,7 @@ func NewLogger(cmd *cobra.Command, cfg GlobalConfig) (ctx context.Context, logge
 	// Open the log file and set the logger to write to it.
 	if logFile := cfg.LogFile(); logFile != "" {
 		file, err := os.OpenFile(logFile, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0644)
-		logger.ErrorIfError(ctx, "error opening log file", err)
+		HandleError(ctx, logger, "error opening log file", err)
 		logger.SetOutput(file)
 	}
 

@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"fmt"
+	"errors"
 
 	"github.com/QuickBase/quickbase-cli/qbcli"
 	"github.com/QuickBase/quickbase-cli/qbclient"
@@ -9,29 +9,33 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// configSetupCmd represents the app command
 var configSetupCmd = &cobra.Command{
 	Use:   "setup",
 	Short: "Run initial setup of a configuration file",
-	Args:  configSetupCmdValidate,
+
+	Args: func(cmd *cobra.Command, args []string) error {
+		return globalCfg.ReadInConfig()
+	},
 
 	Run: func(cmd *cobra.Command, args []string) {
+		ctx, logger, _ := qbcli.NewLogger(cmd, globalCfg)
 
-		// Bail if there is an existing configuration file.
 		filepath := qbclient.Filepath(globalCfg.ConfigDir(), qbclient.ConfigFilename)
+		ctx = cliutil.ContextWithLogTag(ctx, "file", filepath)
+
 		if qbclient.FileExists(filepath) {
-			fmt.Printf("Configuration file already created at %s.\nPlease edit the file directly.\n", filepath)
-			return
+			err := errors.New("config file already created")
+			qbcli.HandleError(ctx, logger, "please edit the config file directly", err)
 		}
 
 		hostname, err := qbcli.Prompt("Realm Hostname: ", qbclient.ValidateHostname)
-		cliutil.HandleError(cmd, err, "error reading realm hostname")
+		qbcli.HandleError(ctx, logger, "error reading realm hostname", err)
 
 		usertoken, err := qbcli.Prompt("User Token: ", qbclient.ValidateNotEmptyFn("user token"))
-		cliutil.HandleError(cmd, err, "error reading user token")
+		qbcli.HandleError(ctx, logger, "error reading user token", err)
 
 		appID, err := qbcli.Prompt("App ID (optional): ", qbclient.NoValidation)
-		cliutil.HandleError(cmd, err, "error reading app id")
+		qbcli.HandleError(ctx, logger, "error reading app id", err)
 
 		cf := make(map[string]*qbclient.ConfigFileProfile, 1)
 		cf["default"] = &qbclient.ConfigFileProfile{
@@ -41,19 +45,11 @@ var configSetupCmd = &cobra.Command{
 		}
 
 		err = qbclient.WriteConfigFile(globalCfg.ConfigDir(), cf)
-		cliutil.HandleError(cmd, err, "error writing config file")
-
-		fmt.Printf("\nConfig file written to %s.\n", filepath)
+		qbcli.HandleError(ctx, logger, "error writing config file", err)
+		logger.Notice(ctx, "setup complete")
 	},
 }
 
 func init() {
 	configCmd.AddCommand(configSetupCmd)
-}
-
-func configSetupCmdValidate(cmd *cobra.Command, args []string) error {
-	if err := globalCfg.ReadInConfig(); err != nil {
-		return err
-	}
-	return nil
 }

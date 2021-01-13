@@ -719,7 +719,7 @@ func unmarshalField(fid int, ftype string, data *json.RawMessage) (val *Value, e
 }
 
 // UnmarshalJSON implements json.UnmarshalJSON by using the field type to
-// decode the "value" parameter into the appropraite data type.
+// decode the "value" parameter into the appropriate data type.
 func (output *QueryRecordsOutput) UnmarshalJSON(b []byte) (err error) {
 
 	// Unmarshal the json into our parsing struct.

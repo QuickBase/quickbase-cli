@@ -1,3 +1,7 @@
+
+[![Go Reference](https://pkg.go.dev/badge/github.com/QuickBase/quickbase-cli.svg)](https://pkg.go.dev/github.com/QuickBase/quickbase-cli)
+[![Go Report Card](https://goreportcard.com/badge/github.com/QuickBase/quickbase-cli)](https://goreportcard.com/report/github.com/QuickBase/quickbase-cli)
+
 # Quickbase Command Line Interface
 
 The Quickbase Command Line Interface (CLI) is a tool to manage your Quickbase applications.

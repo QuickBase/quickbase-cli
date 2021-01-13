@@ -35,7 +35,7 @@ func New(cfg ConfigIface) *Client {
 
 	// Configure and set the retry handler.
 	rh := retryablehttp.NewClient()
-	rh.RetryMax = 1
+	rh.RetryMax = 2
 	rh.Logger = nil
 	rh.ErrorHandler = c.errorHandler
 	c.HTTPClient = rh.StandardClient()
@@ -55,7 +55,7 @@ func NewFromProfile(profile string) (client *Client, err error) {
 }
 
 func userAgent() string {
-	return fmt.Sprintf("quickbase-cli/%s, (%s %s)", "0.0.1-alpha", runtime.GOOS, runtime.GOARCH)
+	return fmt.Sprintf("quickbase-cli/%s, (%s %s)", Version, runtime.GOOS, runtime.GOARCH)
 }
 
 // AddPlugin adds a Plugin to the stack.
@@ -123,7 +123,7 @@ func (c *Client) Do(input Input, output Output) error {
 	return output.handleError(output, resp)
 }
 
-// errorHandler implements retryablehttp.ErrorHandler by invoking post-reponse
+// errorHandler implements retryablehttp.ErrorHandler by invoking post-response
 // plugins after the error occurs. It then closes the response body and returns
 // the same error message as retryablehttp.Do.
 func (c *Client) errorHandler(resp *http.Response, err error, numTries int) (*http.Response, error) {

@@ -14,7 +14,14 @@ var variableGetCfg *viper.Viper
 var variableGetCmd = &cobra.Command{
 	Use:   "get",
 	Short: "Get a variable",
-	Args:  variableGetCmdValidate,
+
+	Args: func(cmd *cobra.Command, args []string) (err error) {
+		if err = globalCfg.Validate(); err == nil {
+			globalCfg.SetDefaultAppID(variableGetCfg)
+			qbcli.SetOptionFromArg(variableGetCfg, args, 0, "name")
+		}
+		return
+	},
 
 	Run: func(cmd *cobra.Command, args []string) {
 		ctx, logger, qb := qbcli.NewClient(cmd, globalCfg)
@@ -31,12 +38,4 @@ func init() {
 	var flags *cliutil.Flagger
 	variableGetCfg, flags = cliutil.AddCommand(variableCmd, variableGetCmd, qbclient.EnvPrefix)
 	flags.SetOptions(&qbclient.GetVariableInput{})
-}
-
-func variableGetCmdValidate(cmd *cobra.Command, args []string) (err error) {
-	if err = globalCfg.Validate(); err == nil {
-		globalCfg.SetDefaultAppID(variableGetCfg)
-		qbcli.SetOptionFromArg(variableGetCfg, args, 0, "name")
-	}
-	return
 }

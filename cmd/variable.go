@@ -4,7 +4,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// variableCmd represents the variable command
 var variableCmd = &cobra.Command{
 	Use:     "variable",
 	Aliases: []string{"var"},

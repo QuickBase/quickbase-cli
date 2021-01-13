@@ -4,7 +4,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// tableCmd represents the table command
 var tableCmd = &cobra.Command{
 	Use:   "table",
 	Short: "Tables resources",

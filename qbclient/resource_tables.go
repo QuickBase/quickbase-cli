@@ -13,12 +13,12 @@ type CreateTableInput struct {
 	c *Client
 	u string
 
-	AppID        string `json:"-" validate:"required"`
-	Name         string `json:"name" validate:"required"`
-	Description  string `json:"description"`
-	IconName     string `json:"iconName"`
-	SingularNoun string `json:"singularNoun"`
-	PluralNoun   string `json:"pluralNoun"`
+	AppID        string `json:"-" validate:"required" cliutil:"option=app-id"`
+	Name         string `json:"name" validate:"required" cliutil:"option=name"`
+	Description  string `json:"description" cliutil:"option=description"`
+	IconName     string `json:"iconName" cliutil:"option=icon-name"`
+	SingularNoun string `json:"singularNoun" cliutil:"option=singular-noun"`
+	PluralNoun   string `json:"pluralNoun" cliutil:"option=plural-noun"`
 }
 
 func (i *CreateTableInput) url() string                  { return i.u }
@@ -33,10 +33,11 @@ type CreateTableOutput struct {
 
 	TableID      string `json:"id,omitempty"`
 	Name         string `json:"name,omitempty"`
-	Description  string `json:"description,omitempty"`
 	IconName     string `json:"iconName,omitempty"`
 	SingularNoun string `json:"singularNoun,omitempty"`
 	PluralNoun   string `json:"pluralNoun,omitempty"`
+
+	// Description is defined in ErrorProperties.
 }
 
 func (o *CreateTableOutput) decode(body io.ReadCloser) error { return unmarshalJSON(body, &o) }
@@ -57,7 +58,7 @@ type ListTablesInput struct {
 	c *Client
 	u string
 
-	AppID string `json:"-" validate:"required"`
+	AppID string `json:"-" validate:"required" cliutil:"option=app-id"`
 }
 
 func (i *ListTablesInput) url() string                  { return i.u }
@@ -131,13 +132,14 @@ func (c *Client) ListTablesByAppID(id string) (*ListTablesOutput, error) {
 	return c.ListTables(&ListTablesInput{AppID: id})
 }
 
-// GetTableInput models the input sent to GET /v1/tables/{tableId}.
+// GetTableInput models the input sent to GET /v1/tables/{tableId}?appId={appId}s.
 // See https://developer.quickbase.com/operation/getTable
 type GetTableInput struct {
 	c *Client
 	u string
 
-	TableID string `json:"-" validate:"required"`
+	AppID   string `json:"-" validate:"required" cliutil:"option=app-id"`
+	TableID string `json:"-" validate:"required" cliutil:"option=table-id"`
 }
 
 func (i *GetTableInput) url() string                  { return i.u }
@@ -145,7 +147,7 @@ func (i *GetTableInput) method() string               { return http.MethodGet }
 func (i *GetTableInput) addHeaders(req *http.Request) { addHeadersJSON(req, i.c) }
 func (i *GetTableInput) encode() ([]byte, error)      { return marshalJSON(i) }
 
-// GetTableOutput models the output returned by GET /v1/tables/{tableId}.
+// GetTableOutput models the output returned by GET /v1/tables/{tableId}?appId={appId}.
 // See https://developer.quickbase.com/operation/getTable
 type GetTableOutput struct {
 	ErrorProperties
@@ -153,7 +155,6 @@ type GetTableOutput struct {
 	Name               string     `json:"name,omitempty"`
 	TableID            string     `json:"id,omitempty"`
 	Alias              string     `json:"alias,omitempty"`
-	Description        string     `json:"description,omitempty"`
 	Created            *Timestamp `json:"created,omitempty"`
 	Updated            *Timestamp `json:"updated,omitempty"`
 	NextRecordID       int        `json:"nextRecordId,omitempty"`
@@ -165,24 +166,20 @@ type GetTableOutput struct {
 	PluralRecordName   string     `json:"pluralRecordName,omitempty"`
 	TimeZone           string     `json:"timeZone,omitempty"`
 	DateFormat         string     `json:"dateFormat,omitempty"`
+
+	// Description is defined in ErrorProperties.
 }
 
 func (o *GetTableOutput) decode(body io.ReadCloser) error { return unmarshalJSON(body, &o) }
 
-// GetTable sends a request to GET /v1/tables/{tableId}.
+// GetTable sends a request to GET /v1/tables/{tableId}?appId={appId}.
 // See https://developer.quickbase.com/operation/getTable
 func (c *Client) GetTable(input *GetTableInput) (output *GetTableOutput, err error) {
 	input.c = c
-	input.u = c.URL + "/tables/" + url.PathEscape(input.TableID)
+	input.u = c.URL + "/tables/" + url.PathEscape(input.TableID) + "?appId=" + url.QueryEscape(input.AppID)
 	output = &GetTableOutput{}
 	err = c.Do(input, output)
 	return
-}
-
-// GetTableByID sends a request to GET /v1/tables/{tableId} and gets a table ID.
-// See https://developer.quickbase.com/operation/getTable
-func (c *Client) GetTableByID(id string) (*GetTableOutput, error) {
-	return c.GetTable(&GetTableInput{TableID: id})
 }
 
 // UpdateTableInput models the input sent to POST /v1/tables/{tableId}?appId={appId}.
@@ -191,13 +188,13 @@ type UpdateTableInput struct {
 	c *Client
 	u string
 
-	AppID        string `json:"-" validate:"required"`
-	TableID      string `json:"-" validate:"required"`
-	Name         string `json:"name,omitempty"`
-	Description  string `json:"description,omitempty"`
-	IconName     string `json:"iconName,omitempty"`
-	SingularNoun string `json:"singularNoun,omitempty"`
-	PluralNoun   string `json:"pluralNoun,omitempty"`
+	AppID        string `json:"-" validate:"required" cliutil:"option=app-id"`
+	TableID      string `json:"-" validate:"required" cliutil:"option=table-id"`
+	Name         string `json:"name,omitempty" cliutil:"option=name"`
+	Description  string `json:"description,omitempty" cliutil:"option=description"`
+	IconName     string `json:"iconName,omitempty" cliutil:"option=icon-name"`
+	SingularNoun string `json:"singularNoun,omitempty" cliutil:"option=singular-noun"`
+	PluralNoun   string `json:"pluralNoun,omitempty" cliutil:"option=plural-noun"`
 }
 
 func (i *UpdateTableInput) url() string                  { return i.u }
@@ -212,10 +209,11 @@ type UpdateTableOutput struct {
 
 	TableID      string `json:"id,omitempty"`
 	Name         string `json:"name,omitempty"`
-	Description  string `json:"description,omitempty"`
 	IconName     string `json:"iconName,omitempty"`
 	SingularNoun string `json:"singularNoun,omitempty"`
 	PluralNoun   string `json:"pluralNoun,omitempty"`
+
+	// Description is defined in ErrorProperties.
 }
 
 func (o *UpdateTableOutput) decode(body io.ReadCloser) error { return unmarshalJSON(body, &o) }
@@ -236,8 +234,8 @@ type DeleteTableInput struct {
 	c *Client
 	u string
 
-	AppID   string `json:"-" validate:"required"`
-	TableID string `json:"-" validate:"required"`
+	AppID   string `json:"-" validate:"required" cliutil:"option=app-id"`
+	TableID string `json:"-" validate:"required" cliutil:"option=table-id"`
 }
 
 func (i *DeleteTableInput) url() string                  { return i.u }

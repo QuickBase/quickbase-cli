@@ -14,51 +14,74 @@ import (
 
 var tableOpenCfg *viper.Viper
 
-// tableOpenCmd represents the app get command
 var tableOpenCmd = &cobra.Command{
 	Use:   "open",
 	Short: "Open a table's page in a browser",
-	Args:  tableOpenCmdValidate,
+
+	Args: func(cmd *cobra.Command, args []string) (err error) {
+		err = globalCfg.Validate()
+		if err == nil {
+			globalCfg.SetDefaultTableID(tableOpenCfg)
+			qbcli.SetOptionFromArg(tableOpenCfg, args, 0, qbclient.OptionTableID)
+		}
+		return
+	},
 
 	Run: func(cmd *cobra.Command, args []string) {
 		ctx, logger, _ := qbcli.NewLogger(cmd, globalCfg)
-		tableID := tableOpenCfg.GetString(qbclient.OptionTableID)
 
-		var a string
-		if !tableOpenCfg.GetBool("settings") {
-			a = "td"
-		} else {
-			a = "TableSettingsHome"
-		}
+		opts := &TableOpenOpts{}
+		qbcli.GetOptions(ctx, logger, opts, tableOpenCfg)
 
-		u := fmt.Sprintf("https://%s/db/%s?a=%s", globalCfg.RealmHostname(), url.PathEscape(tableID), a)
+		u := fmt.Sprintf("https://%s/db/%s%s", globalCfg.RealmHostname(), url.PathEscape(opts.TableID), opts.Vars())
+		ctx = cliutil.ContextWithLogTag(ctx, "url", u)
+
 		err := browser.OpenURL(u)
-		logger.FatalIfError(ctx, "error opening table in browser", err)
+		qbcli.HandleError(ctx, logger, "error opening table in browser", err)
 	},
 }
 
 func init() {
 	var flags *cliutil.Flagger
 	tableOpenCfg, flags = cliutil.AddCommand(tableCmd, tableOpenCmd, qbclient.EnvPrefix)
-
-	flags.String(qbclient.OptionTableID, "", "", qbcli.OptionTableIDDescription)
-	flags.Bool("settings", "", false, "open the settings page")
+	flags.SetOptions(&TableOpenOpts{})
 }
 
-func tableOpenCmdValidate(cmd *cobra.Command, args []string) error {
-	if err := globalCfg.Validate(); err != nil {
-		return err
+// TableOpenOpts contains the options for the table open command.
+type TableOpenOpts struct {
+	TableID  string `cliutil:"option=table-id"`
+	Settings string `cliutil:"option=settings"`
+}
+
+// Vars returns the query string variables based on TableOpenOpts.Settings.
+func (o TableOpenOpts) Vars() string {
+	if !tableOpenCfg.IsSet("settings") {
+		return ""
 	}
 
-	// Set the default Table ID if configured.
-	if tableID := globalCfg.DefaultTableID(); tableID != "" {
-		tableOpenCfg.SetDefault(qbclient.OptionTableID, tableID)
+	a := "?a="
+	switch o.Settings {
+	case "access", "permissions":
+		a += "TablePermissions"
+	case "actions":
+		a += "QuickBaseActionList"
+	case "advanced":
+		a += "KeyProps"
+	case "forms":
+		a += "DFormList"
+	case "fields":
+		a += "listfields"
+	case "notifications":
+		a += "EmailList"
+	case "relationships":
+		a += "Relationships"
+	case "reports":
+		a += "ReportList"
+	case "webhooks":
+		a += "WebhookList"
+	default:
+		a += "TableSettingsHome"
 	}
 
-	// Use args[0] as value for the Table ID.
-	if len(args) > 0 {
-		tableOpenCfg.SetDefault(qbclient.OptionTableID, args[0])
-	}
-
-	return nil
+	return a
 }

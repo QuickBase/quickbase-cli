@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"fmt"
 	"strconv"
 
 	"github.com/QuickBase/quickbase-cli/qbcli"
@@ -8,7 +9,6 @@ import (
 	"github.com/cpliakas/cliutil"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"golang.org/x/exp/errors/fmt"
 )
 
 var recordsInsertCfg *viper.Viper

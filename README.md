@@ -203,6 +203,35 @@ quickbase-cli table list --app-id bqgruir3g --filter "tables[].name | sort(@) | 
 }
 ```
 
+#### Navigation Helpers
+
+The CLI tool has navigation helpers via `open` commands that make it easy to jump to specific pages in the UI. The commands below assume a default application is confgured, which is why the `--app-id` option is omitted, and open your browser when run:
+
+```sh
+
+# Navigate to the app's homepage.
+quickbase-cli app open
+
+# Navigate to the app's settings page.
+quickbase-cli app open --settings all
+
+# Navigate to the app's "Roles" settings page.
+quickbase-cli app open --settings roles
+
+# Valid values for the --settings option are all, branding, management, pages,
+# properties, roles, tables, and variables.
+
+# Navigate the the table's home page.
+quickbase-cli table open bq4w73asu
+
+# Navigate to the table's settings page.
+quickbase-cli table open bq4w73asu --settings all
+
+# Valid values for the --settings option are actions, access, advanced, all,
+# forms, fields, notifications, relationships, reports, webhooks.
+
+```
+
 ### Global Options
 
 #### -h, --help

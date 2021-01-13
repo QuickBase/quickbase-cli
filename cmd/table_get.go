@@ -10,15 +10,26 @@ import (
 
 var tableGetCfg *viper.Viper
 
-// tableGetCmd represents the app get command
 var tableGetCmd = &cobra.Command{
 	Use:   "get",
 	Short: "Get a table definition",
-	Args:  tableGetCmdValidate,
+
+	Args: func(cmd *cobra.Command, args []string) (err error) {
+		if err = globalCfg.Validate(); err == nil {
+			globalCfg.SetDefaultAppID(tableGetCfg)
+			globalCfg.SetDefaultTableID(tableGetCfg)
+			qbcli.SetOptionFromArg(tableGetCfg, args, 0, qbclient.OptionTableID)
+		}
+		return
+	},
 
 	Run: func(cmd *cobra.Command, args []string) {
 		ctx, logger, qb := qbcli.NewClient(cmd, globalCfg)
-		output, err := qb.GetTableByID(tableGetCfg.GetString(qbclient.OptionTableID))
+
+		input := &qbclient.GetTableInput{}
+		qbcli.GetOptions(ctx, logger, input, tableGetCfg)
+
+		output, err := qb.GetTable(input)
 		qbcli.Render(ctx, logger, cmd, globalCfg, output, err)
 	},
 }
@@ -26,24 +37,5 @@ var tableGetCmd = &cobra.Command{
 func init() {
 	var flags *cliutil.Flagger
 	tableGetCfg, flags = cliutil.AddCommand(tableCmd, tableGetCmd, qbclient.EnvPrefix)
-
-	flags.String(qbclient.OptionTableID, "", "", qbcli.OptionTableIDDescription)
-}
-
-func tableGetCmdValidate(cmd *cobra.Command, args []string) error {
-	if err := globalCfg.Validate(); err != nil {
-		return err
-	}
-
-	// Set the default Table ID if configured.
-	if tableID := globalCfg.DefaultTableID(); tableID != "" {
-		tableGetCfg.SetDefault(qbclient.OptionTableID, tableID)
-	}
-
-	// Use args[0] as value for the Table ID.
-	if len(args) > 0 {
-		tableGetCfg.SetDefault(qbclient.OptionTableID, args[0])
-	}
-
-	return nil
+	flags.SetOptions(&qbclient.GetTableInput{})
 }

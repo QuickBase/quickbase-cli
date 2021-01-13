@@ -10,15 +10,25 @@ import (
 
 var tableListCfg *viper.Viper
 
-// tableListCmd represents the app get command
 var tableListCmd = &cobra.Command{
 	Use:   "list",
 	Short: "List tables in an app",
-	Args:  tableListCmdValidate,
+
+	Args: func(cmd *cobra.Command, args []string) (err error) {
+		if err = globalCfg.Validate(); err == nil {
+			globalCfg.SetDefaultAppID(tableListCfg)
+			qbcli.SetOptionFromArg(tableListCfg, args, 0, qbclient.OptionAppID)
+		}
+		return
+	},
 
 	Run: func(cmd *cobra.Command, args []string) {
 		ctx, logger, qb := qbcli.NewClient(cmd, globalCfg)
-		output, err := qb.ListTablesByAppID(tableListCfg.GetString(qbclient.OptionAppID))
+
+		input := &qbclient.ListTablesInput{}
+		qbcli.GetOptions(ctx, logger, input, tableListCfg)
+
+		output, err := qb.ListTables(input)
 		qbcli.Render(ctx, logger, cmd, globalCfg, output, err)
 	},
 }
@@ -26,19 +36,5 @@ var tableListCmd = &cobra.Command{
 func init() {
 	var flags *cliutil.Flagger
 	tableListCfg, flags = cliutil.AddCommand(tableCmd, tableListCmd, qbclient.EnvPrefix)
-
-	flags.String(qbclient.OptionAppID, "", "", qbcli.OptionAppIDDescription)
-}
-
-func tableListCmdValidate(cmd *cobra.Command, args []string) error {
-	if err := globalCfg.Validate(); err != nil {
-		return err
-	}
-
-	// Set the default App ID if configured.
-	if appID := globalCfg.DefaultAppID(); appID != "" {
-		tableListCfg.SetDefault(qbclient.OptionAppID, appID)
-	}
-
-	return nil
+	flags.SetOptions(&qbclient.ListTablesInput{})
 }

@@ -14,7 +14,6 @@ require (
 	github.com/rs/xid v1.2.1
 	github.com/spf13/cobra v1.1.1
 	github.com/spf13/viper v1.7.1
-	golang.org/x/exp/errors v0.0.0-20201229011636-eab1b5eb1a03
 	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
 )

@@ -149,16 +149,18 @@ func (p DumpPlugin) PostResponse(resp *http.Response) {
 	resp.Body = ioutil.NopCloser(bytes.NewBuffer(body))
 }
 
-func (p DumpPlugin) openDumpFile(typ string) (ctx context.Context, file *os.File, err error) {
-	filename := fmt.Sprintf("%v-%s-%s.txt", time.Now().Unix(), p.transid, typ)
+func (p DumpPlugin) openDumpFile(op string) (ctx context.Context, file *os.File, err error) {
+	filename := fmt.Sprintf("%v-%s-%s.txt", time.Now().Unix(), p.transid, op)
 	filepath := qbclient.Filepath(p.directory, filename)
-	ctx = cliutil.ContextWithLogTag(p.ctx, "file", filepath)
 
-	// Open the file, log the result.
-	if file, err = os.OpenFile(filepath, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0644); err == nil {
-		p.logger.Debug(ctx, fmt.Sprintf("created dump file for %s", typ))
+	ctx = cliutil.ContextWithLogTag(p.ctx, "file", filepath)
+	ctx = cliutil.ContextWithLogTag(p.ctx, "operation", op)
+
+	file, err = os.OpenFile(filepath, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0644)
+	if err == nil {
+		p.logger.Debug(ctx, "created dump file")
 	} else {
-		p.logger.Error(ctx, fmt.Sprintf("error creating dump file for %s", typ), err)
+		p.logger.Error(ctx, "error creating dump file", err)
 	}
 
 	return

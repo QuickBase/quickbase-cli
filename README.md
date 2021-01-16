@@ -79,7 +79,7 @@ quickbase-cli records delete --where '6="Another Record"'
 
 ## Usage
 
-#### Command Format
+### Command Format
 
 Exmaple command that gets an app definition:
 
@@ -104,7 +104,7 @@ quickbase-cli app get --app-id bqgruir3g
 }
 ```
 
-#### Querying For Records
+### Querying For Records
 
 Example command that queries for records (where Record #ID is 2):
 
@@ -168,7 +168,7 @@ Just passing a number will find a record by its ID:
 quickbase-cli records query --select 6,7,8 --from bqgruir7z --where 2
 ```
 
-#### Creating Records
+### Creating Records
 
 Example command that creates a record where field 6 equals "Another Record" and field 7 equals 3:
 
@@ -189,7 +189,7 @@ quickbase-cli records insert --to bqgruir7z --data '6="Another Record" 7=3'
 }
 ```
 
-#### Transforming Output
+### Transforming Output
 
 [JMESPath](https://jmespath.org/) is a powerful query language for JSON. You can apply JMESPath filters to transform the output of commands to make the data easier to work with. For example, let say you want to get only a list of table names in an app sorted alphabetically. To accomplish this, you can apply a JMESPath filter using the `--filter` option to the command below:
 
@@ -203,7 +203,7 @@ quickbase-cli table list --app-id bqgruir3g --filter "tables[].name | sort(@) | 
 }
 ```
 
-#### Navigation Helpers
+### Navigation Helpers
 
 The CLI tool has navigation helpers via `open` commands that make it easy to jump to specific pages in the UI. The commands below assume a default application is confgured, which is why the `--app-id` option is omitted, and open your browser when run:
 

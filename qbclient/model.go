@@ -3,6 +3,7 @@ package qbclient
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -12,6 +13,9 @@ import (
 
 	"github.com/araddon/dateparse"
 )
+
+// ErrInvalidType is an invalid field type error.
+var ErrInvalidType = errors.New("field type invalid")
 
 // SetRecords sets the records to insert.
 //
@@ -430,7 +434,7 @@ func NewValueFromString(val, ftype string) (v *Value, err error) {
 		v = NewPredecessorValue(val)
 
 	default:
-		err = fmt.Errorf("unsupported field type (%s)", ftype)
+		err = fmt.Errorf("%s: %w", ftype, ErrInvalidType)
 	}
 
 	return
@@ -512,7 +516,7 @@ func (v *Value) MarshalJSON() ([]byte, error) {
 		return json.Marshal(v.String)
 
 	default:
-		return []byte(``), fmt.Errorf("unsupported field type (%s)", v.QuickBaseType)
+		return []byte(``), fmt.Errorf("%s: %w", v.QuickBaseType, ErrInvalidType)
 	}
 }
 
@@ -708,11 +712,11 @@ func unmarshalField(fid int, ftype string, data *json.RawMessage) (val *Value, e
 		}
 
 	default:
-		err = fmt.Errorf("unsupported field type (%s)", ftype)
+		err = fmt.Errorf("%s: %w", ftype, ErrInvalidType)
 	}
 
 	if err != nil {
-		err = fmt.Errorf("%s (fid %v)", err, fid)
+		err = fmt.Errorf("fid %v: %w", fid, err)
 	}
 
 	return
@@ -750,7 +754,7 @@ func (output *QueryRecordsOutput) UnmarshalJSON(b []byte) (err error) {
 			// Get the Quick Base field type from the fid.
 			ftype, ok := tmap[fid]
 			if !ok {
-				err = fmt.Errorf("field type not found (fid %v)", fid)
+				err = fmt.Errorf("fid %v, %w", fid, fmt.Errorf("%s: %w", ftype, ErrInvalidType))
 				return
 			}
 
@@ -802,12 +806,12 @@ func (t *Timestamp) UnmarshalJSON(b []byte) error {
 	buf := bytes.NewBufferString(string(b))
 	err := json.NewDecoder(buf).Decode(&s)
 	if err != nil {
-		return fmt.Errorf("error decoding timestamp (%s)", err)
+		return fmt.Errorf("error decoding timestamp: %w", err)
 	}
 
 	t.Time, err = time.Parse(FormatDateTime, s)
 	if err != nil {
-		return fmt.Errorf("error parsing timestamp (%s)", err)
+		return fmt.Errorf("error parsing timestamp: %w", err)
 	}
 
 	return nil
@@ -828,24 +832,24 @@ type User struct {
 type Field struct {
 
 	// Basics
-	Label    string `json:"label,omitempty" validate:"required"`
-	Type     string `json:"fieldType,omitempty" validate:"required"`
-	Required bool   `json:"required,omitempty"`
-	Unique   bool   `json:"unique,omitempty"`
+	Label    string `json:"label,omitempty" validate:"required" cliutil:"option=label"`
+	Type     string `json:"fieldType,omitempty" validate:"required" cliutil:"option=type"`
+	Required bool   `json:"required,omitempty" cliutil:"option=required"`
+	Unique   bool   `json:"unique,omitempty" cliutil:"option=unique"`
 
 	// Display
-	DisplayInBold          bool `json:"bold,omitempty"`
-	DisplayWithoutWrapping bool `json:"noWrap,omitempty"`
+	DisplayInBold          bool `json:"bold,omitempty" cliutil:"option=bold"`
+	DisplayWithoutWrapping bool `json:"noWrap,omitempty" cliutil:"option=no-wrap"`
 
 	// Advanced
-	AutoFill        bool   `json:"doesDataCopy,omitempty"`
-	Searchable      bool   `json:"findEnabled"`      // Defaults to true, so we cannot omitempty.
-	AddToNewReports bool   `json:"appearsByDefault"` // Defaults to true, so we cannot omitempty.
-	FieldHelpText   string `json:"fieldHelp,omitempty"`
-	TrackField      bool   `json:"audited,omitempty"`
+	AutoFill        bool   `json:"doesDataCopy,omitempty" cliutil:"option=auto-fill"`
+	Searchable      bool   `json:"findEnabled" cliutil:"option=searchable"`          // Defaults to true, so we cannot omitempty.
+	AddToNewReports bool   `json:"appearsByDefault" cliutil:"option=add-to-reports"` // Defaults to true, so we cannot omitempty.
+	FieldHelpText   string `json:"fieldHelp,omitempty" cliutil:"option=help-text"`
+	TrackField      bool   `json:"audited,omitempty" cliutil:"option=track-field"`
 
 	// No UI
-	AddToForms bool `json:"addToForms,omitempty"` // Not documented
+	AddToForms bool `json:"addToForms,omitempty" cliutil:"option=add-to-forms"`
 }
 
 // FieldProperties models field properties.
@@ -854,27 +858,27 @@ type Field struct {
 type FieldProperties struct {
 
 	// Basics
-	DefaultValue string `json:"defaultValue,omitempty"`
+	DefaultValue string `json:"defaultValue,omitempty" cliutil:"option=default"`
 
 	// Text - Multiple Choice field options
-	AllowNewChoices    bool `json:"allowNewChoices,omitempty"`
-	SortChoicesAsGiven bool `json:"sortAsGiven,omitempty"`
+	AllowNewChoices    bool `json:"allowNewChoices,omitempty" cliutil:"option=allow-new-choices"`
+	SortChoicesAsGiven bool `json:"sortAsGiven,omitempty" cliutil:"option=sort-as-given"`
 
 	// Display
-	NumberOfLines   int `json:"numLines,omitempty"`
-	MaxCharacters   int `json:"maxLength,omitempty"`
-	WidthOfInputBox int `json:"width,omitempty"`
+	NumberOfLines   int `json:"numLines,omitempty" cliutil:"option=num-lines"`
+	MaxCharacters   int `json:"maxLength,omitempty" cliutil:"option=max"`
+	WidthOfInputBox int `json:"width,omitempty" cliutil:"option=width"`
 
 	// No UI
-	ExactMatch   bool   `json:"exact,omitempty"`
-	ForeignKey   bool   `json:"foreignKey,omitempty"`
-	Formula      string `json:"formula,omitempty"`
-	ParentTable  string `json:"masterTableTag,omitempty"`
-	PrimaryKey   bool   `json:"primaryKey,omitempty"`
-	RelatedField int    `json:"targetFieldId,omitempty"`
+	ExactMatch   bool   `json:"exact,omitempty" cliutil:"option=exact-match"`
+	ForeignKey   bool   `json:"foreignKey,omitempty" cliutil:"option=foreign-key"`
+	Formula      string `json:"formula,omitempty" cliutil:"option=formula"`
+	ParentTable  string `json:"masterTableTag,omitempty" cliutil:"option=parent-table"`
+	PrimaryKey   bool   `json:"primaryKey,omitempty" cliutil:"option=primary-key"`
+	RelatedField int    `json:"targetFieldId,omitempty" cliutil:"option=related-field"`
 
 	// Comments
-	Comments string `json:"comments,omitempty"`
+	Comments string `json:"comments,omitempty" cliutil:"option=comments"`
 }
 
 // FieldPermission models the permissions properties.

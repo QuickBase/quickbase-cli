@@ -83,7 +83,7 @@ type CreateFieldInput struct {
 	c *Client
 	u string
 
-	TableID    string                      `json:"-" validate:"required"`
+	TableID    string                      `json:"-" validate:"required" cliutil:"option=table-id"`
 	Properties *CreateFieldInputProperties `json:"properties,omitempty"`
 }
 

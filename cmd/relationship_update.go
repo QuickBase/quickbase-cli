@@ -25,7 +25,7 @@ var relationshipUpdateCmd = &cobra.Command{
 		}
 
 		// Parse the list of fields IDs.
-		fids, err := qbcli.ParseFieldList(relationshipUpdateCfg.GetString("lookup-fields"))
+		fids, err := cliutil.ParseIntSlice(relationshipUpdateCfg.GetString("lookup-fields"))
 		cliutil.HandleError(cmd, err, "lookup-fields option invalid")
 		if len(fids) > 0 {
 			input.LookupFieldIDs = fids

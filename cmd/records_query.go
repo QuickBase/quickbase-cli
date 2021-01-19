@@ -20,7 +20,7 @@ var recordsQueryCmd = &cobra.Command{
 		ctx, logger, qb := qbcli.NewClient(cmd, globalCfg)
 
 		// Parse the list of fields IDs.
-		fids, err := qbcli.ParseFieldList(recordsQueryCfg.GetString("select"))
+		fids, err := cliutil.ParseIntSlice(recordsQueryCfg.GetString("select"))
 		cliutil.HandleError(cmd, err, "select option invalid")
 
 		// Parse the "where" clause.

@@ -44,7 +44,7 @@ var recordsInsertCmd = &cobra.Command{
 			record.SetValue(fid, v)
 		}
 
-		fids, err := qbcli.ParseFieldList(recordsInsertCfg.GetString("fields-to-return"))
+		fids, err := cliutil.ParseIntSlice(recordsInsertCfg.GetString("fields-to-return"))
 		cliutil.HandleError(cmd, err, "invalid option (fields-to-return)")
 
 		input := &qbclient.InsertRecordsInput{

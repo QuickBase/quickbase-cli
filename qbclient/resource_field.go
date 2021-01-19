@@ -14,8 +14,8 @@ type ListFieldsInput struct {
 	c *Client
 	u string
 
-	TableID                 string `json:"-" validate:"required"`
-	IncludeFieldPermissions bool   `json:"includeFieldPerms"`
+	TableID                 string `json:"-" validate:"required" cliutil:"option=table-id"`
+	IncludeFieldPermissions bool   `json:"includeFieldPerms" cliutil:"option=include-field-permissions"`
 }
 
 func (i *ListFieldsInput) url() string                  { return i.u }
@@ -119,6 +119,7 @@ type CreateFieldOutputProperties struct {
 func (c *Client) CreateField(input *CreateFieldInput) (output *CreateFieldOutput, err error) {
 	input.c = c
 	input.u = c.URL + "/fields?tableId=" + url.QueryEscape(input.TableID)
+	input.Create = true
 	output = &CreateFieldOutput{}
 	err = c.Do(input, output)
 	return
@@ -130,8 +131,8 @@ type DeleteFieldsInput struct {
 	c *Client
 	u string
 
-	TableID  string `json:"-" validate:"required"`
-	FieldIDs []int  `json:"fieldIds" validate:"required,min=1"`
+	TableID  string `json:"-" validate:"required" cliutil:"option=table-id"`
+	FieldIDs []int  `json:"fieldIds" validate:"required,min=1" cliutil:"option=field-id"`
 }
 
 func (i *DeleteFieldsInput) url() string                  { return i.u }
@@ -166,8 +167,8 @@ type GetFieldInput struct {
 	c *Client
 	u string
 
-	TableID string `json:"-" validate:"required"`
-	FieldID int    `json:"-" validate:"required"`
+	TableID string `json:"-" validate:"required" cliutil:"option=table-id"`
+	FieldID int    `json:"-" validate:"required" cliutil:"option=field-id"`
 }
 
 func (i *GetFieldInput) url() string                  { return i.u }
@@ -218,8 +219,8 @@ type UpdateFieldInput struct {
 	c *Client
 	u string
 
-	TableID    string                      `json:"-" validate:"required"`
-	FieldID    int                         `json:"-" validate:"required"`
+	TableID    string                      `json:"-" validate:"required" cliutil:"option=table-id"`
+	FieldID    int                         `json:"-" validate:"required" cliutil:"option=field-id"`
 	Properties *UpdateFieldInputProperties `json:"properties,omitempty"`
 }
 
@@ -251,6 +252,7 @@ func (c *Client) UpdateField(input *UpdateFieldInput) (output *UpdateFieldOutput
 	input.c = c
 	fieldID := strconv.Itoa(input.FieldID)
 	input.u = c.URL + "/fields/" + url.PathEscape(fieldID) + "?tableId=" + url.QueryEscape(input.TableID)
+	input.Create = false
 	output = &UpdateFieldOutput{}
 	err = c.Do(input, output)
 	return

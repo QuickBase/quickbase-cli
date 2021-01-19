@@ -7,7 +7,7 @@ import (
 	"runtime"
 
 	"github.com/QuickBase/quickbase-cli/qberrors"
-	"github.com/go-playground/validator"
+	"github.com/go-playground/validator/v10"
 	"github.com/hashicorp/go-retryablehttp"
 	"github.com/spf13/viper"
 )

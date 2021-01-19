@@ -29,7 +29,7 @@ var relationshipCreateCmd = &cobra.Command{
 		}
 
 		// Parse the list of fields IDs.
-		fids, err := qbcli.ParseFieldList(relationshipCreateCfg.GetString("lookup-fields"))
+		fids, err := cliutil.ParseIntSlice(relationshipCreateCfg.GetString("lookup-fields"))
 		cliutil.HandleError(cmd, err, "lookup-fields option invalid")
 		if len(fids) > 0 {
 			input.LookupFieldIDs = fids

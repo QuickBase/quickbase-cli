@@ -8,7 +8,7 @@ The Quickbase Command Line Interface (CLI) is a tool to manage your Quickbase ap
 
 ## Overview
 
-The Quickbase CLI consumes Quickbase's RESTful API, so the commands should feel familiar to those versed in the [API docs](https://developer.quickbase.com/). In addition to being an easy way to consume the RESTful API, this tool is much more than a simple wrapper around it. Using the Quickbase CLI gives you the following benefits:
+The Quickbase CLI consumes Quickbase's APIs, so the commands should feel familiar to those versed in the [JSON](https://developer.quickbase.com/) and [XML](https://help.quickbase.com/api-guide/intro.html) API docs. In addition to being an easy way to consume the APIs, this tool is much more than a simple wrapper around them. Using the Quickbase CLI gives you the following benefits:
 
 * Configuration/credential management with profiles for different realms and apps
 * Resiliency through [backoff retries](https://en.wikipedia.org/wiki/Exponential_backoff)

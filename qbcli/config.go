@@ -7,7 +7,7 @@ import (
 
 	"github.com/QuickBase/quickbase-cli/qbclient"
 	"github.com/cpliakas/cliutil"
-	"github.com/go-playground/validator"
+	"github.com/go-playground/validator/v10"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )

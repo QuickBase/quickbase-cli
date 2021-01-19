@@ -13,28 +13,6 @@ import (
 
 var reSortBy, reGroupBy *regexp.Regexp
 
-// ParseFieldList parses a list of integers from a string.
-func ParseFieldList(s string) (fids []int, err error) {
-	if s == "" {
-		return
-	}
-
-	parts := strings.Split(s, ",")
-	fids = make([]int, len(parts))
-
-	for i, part := range parts {
-		part = strings.TrimSpace(part)
-		if !cliutil.IsNumber(part) {
-			err = errors.New("expecting fid to be a number")
-			return
-		}
-		fid, _ := strconv.Atoi(part)
-		fids[i] = fid
-	}
-
-	return
-}
-
 // ParseQuery parses queries. It also detcts and transforms simple queries into
 // Quick Base query syntax.
 func ParseQuery(q string) string {

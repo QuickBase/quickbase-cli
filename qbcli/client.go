@@ -2,6 +2,8 @@ package qbcli
 
 import (
 	"context"
+	"errors"
+	"fmt"
 	"os"
 
 	"github.com/QuickBase/quickbase-cli/qbclient"
@@ -42,22 +44,37 @@ func NewClient(cmd *cobra.Command, cfg GlobalConfig) (ctx context.Context, logge
 	return
 }
 
-// GetFieldTypeMap returns a mapping of field ID to Quick Base Field type for
-// the fields in a table.
-//
-// TODO Caching?
-//
-// TODO we can detect the various types. through properties.
-func GetFieldTypeMap(qb *qbclient.Client, tableID string) (tmap map[int]string, err error) {
+var tmap map[string]map[int]string
+
+// SetFieldTypeMap sets the field type map for a table.
+func SetFieldTypeMap(qb *qbclient.Client, tableID string) error {
 	output, err := qb.ListFieldsByTableID(tableID)
 	if err != nil {
-		return
+		return err
 	}
 
-	tmap = make(map[int]string, len(output.Fields))
+	m := make(map[int]string, len(output.Fields))
 	for _, field := range output.Fields {
-		tmap[field.FieldID] = field.Type
+		m[field.FieldID] = field.Type
 	}
 
-	return
+	tmap[tableID] = m
+	return nil
+}
+
+// GetFieldTypeMap returns a mapping of field IDs to Quickbase field type for
+// all the fields in a table.
+//
+// TODO Caching?
+func GetFieldTypeMap(tableID string) (map[int]string, error) {
+	m, ok := tmap[tableID]
+	if !ok {
+		err := errors.New("field type map not set")
+		return map[int]string{}, fmt.Errorf("table %s: %w", tableID, err)
+	}
+	return m, nil
+}
+
+func init() {
+	tmap = make(map[string]map[int]string, 0)
 }

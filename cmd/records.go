@@ -4,7 +4,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// recordsCmd represents the app command
 var recordsCmd = &cobra.Command{
 	Use:   "records",
 	Short: "Records resources",

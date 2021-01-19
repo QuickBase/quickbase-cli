@@ -51,7 +51,7 @@ func ParseSortBy(s string) (sortBy []*qbclient.QueryRecordsInputSortBy, err erro
 
 		// Return an error if any clause cannot be parsed.
 		if len(matches) == 0 {
-			err = errors.New("no match")
+			err = errors.New("sort by clause not valid")
 			return
 		}
 
@@ -87,7 +87,7 @@ func ParseGroupBy(s string) (groupBy []*qbclient.QueryRecordsInputGroupBy, err e
 
 		// Return an error if any clause cannot be parsed.
 		if len(matches) == 0 {
-			err = errors.New("no match")
+			err = errors.New("group by clause not valid")
 			return
 		}
 

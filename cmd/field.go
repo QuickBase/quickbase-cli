@@ -4,7 +4,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// fieldCmd represents the app command
 var fieldCmd = &cobra.Command{
 	Use:   "field",
 	Short: "Fields resources",

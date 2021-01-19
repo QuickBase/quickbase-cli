@@ -11,10 +11,10 @@ type InsertRecordsInput struct {
 	c *Client
 	u string
 
-	Data           []map[int]*InsertRecordsInputData `json:"data" validate:"required,min=1"`
-	To             string                            `json:"to" validate:"required"`
-	MergeFieldID   int                               `json:"mergeFieldId,omitempty"`
-	FieldsToReturn []int                             `json:"fieldsToReturn,omitempty"`
+	Data           []map[int]*InsertRecordsInputData `json:"data" validate:"required,min=1" cliutil:"option=data func=record"`
+	To             string                            `json:"to" validate:"required" cliutil:"option=to"`
+	MergeFieldID   int                               `json:"mergeFieldId,omitempty" cliutil:"option=merge-field-id"`
+	FieldsToReturn []int                             `json:"fieldsToReturn,omitempty" cliutil:"option=fields-to-return"`
 }
 
 func (i *InsertRecordsInput) url() string                  { return i.u }
@@ -61,8 +61,8 @@ type DeleteRecordsInput struct {
 	c *Client
 	u string
 
-	From  string `json:"from" validate:"required"`
-	Where string `json:"where" validate:"required"`
+	From  string `json:"from" validate:"required" cliutil:"option=from"`
+	Where string `json:"where" validate:"required" cliutil:"option=where func=query"`
 }
 
 func (i *DeleteRecordsInput) url() string                  { return i.u }
@@ -96,11 +96,11 @@ type QueryRecordsInput struct {
 	c *Client
 	u string
 
-	Select  []int                       `json:"select" validate:"required,min=1"`
-	From    string                      `json:"from" validate:"required"`
-	Where   string                      `json:"where"`
-	GroupBy []*QueryRecordsInputGroupBy `json:"groupBy,omitempty"`
-	SortBy  []*QueryRecordsInputSortBy  `json:"sortBy,omitempty"`
+	Select  []int                       `json:"select" validate:"required,min=1" cliutil:"option=select"`
+	From    string                      `json:"from" validate:"required" cliutil:"option=from"`
+	Where   string                      `json:"where" cliutil:"option=where func=query"`
+	GroupBy []*QueryRecordsInputGroupBy `json:"groupBy,omitempty" cliutil:"option=group-by func=group"`
+	SortBy  []*QueryRecordsInputSortBy  `json:"sortBy,omitempty" cliutil:"option=sort-by func=sort"`
 }
 
 func (i *QueryRecordsInput) url() string                  { return i.u }

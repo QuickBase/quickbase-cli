@@ -22,7 +22,7 @@ The Quickbase CLI consumes Quickbase's APIs, so the commands should feel familia
 
 ## Installation
 
-Download the latest binary for your platform from the [Releases](https://github.com/QuickBase/quiickbase-cli/releases) section to a directory that is in your system's [PATH](https://en.wikipedia.org/wiki/PATH_(variable)).
+Download the latest binary for your platform from the [Releases](https://github.com/QuickBase/quickbase-cli/releases) section to a directory that is in your system's [PATH](https://en.wikipedia.org/wiki/PATH_(variable)).
 
 ### Building From Source
 
@@ -31,6 +31,10 @@ With a [correctly configured](https://golang.org/doc/install#install) Go toolcha
 ```sh
 go get github.com/QuickBase/quickbase-cli
 ```
+
+## Support
+
+The Quickbase CLI is an open source project supported by the community, and it does not fall under the purview of Quickbase Support entitlements. Please use [GitHub issues](https://docs.github.com/en/github/managing-your-work-on-github/about-issues) for bugs, questions, and enhancement requests.
 
 ## Configuration
 
@@ -293,7 +297,7 @@ Suppress output written to STDOUT.
 
 Pass `--log-level debug` to get information useful for debugging. Log messages are written to STDERR, so you can redirect the logs using `2>` without disrupting the normal output.
 
-Valid log levels are `debug`, `info`, `error`, `notice`, `fatal`, and `none`. The default value is `none`.
+Valid log levels are `debug`, `info`, `notice`, `error`, `fatal`, and `none`. The default value is `none`.
 
 #### -f, --log-file
 

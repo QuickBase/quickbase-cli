@@ -16,7 +16,7 @@ type GetVariableInput struct {
 	u string
 
 	AppID string `xml:"-" validate:"required" cliutil:"option=app-id"`
-	Name  string `xml:"varname" validate:"required" cliutil:"option=name"`
+	Name  string `xml:"varname" validate:"required" cliutil:"option=variable-name"`
 }
 
 func (i *GetVariableInput) method() string               { return http.MethodPost }
@@ -58,8 +58,8 @@ type SetVariableInput struct {
 	u string
 
 	AppID string `xml:"-" validate:"required" cliutil:"option=app-id"`
-	Name  string `xml:"varname" validate:"required" cliutil:"option=name"`
-	Value string `xml:"value" cliutil:"option=value"`
+	Name  string `xml:"varname" validate:"required" cliutil:"option=variable-name"`
+	Value string `xml:"value" cliutil:"option=variable-value"`
 }
 
 func (i *SetVariableInput) method() string               { return http.MethodPost }

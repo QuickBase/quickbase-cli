@@ -17,8 +17,8 @@ var variableSetCmd = &cobra.Command{
 	Args: func(cmd *cobra.Command, args []string) (err error) {
 		if err = globalCfg.Validate(); err == nil {
 			globalCfg.SetDefaultAppID(variableSetCfg)
-			qbcli.SetOptionFromArg(variableSetCfg, args, 0, "name")
-			qbcli.SetOptionFromArg(variableSetCfg, args, 1, "value")
+			qbcli.SetOptionFromArg(variableSetCfg, args, 0, "variable-name")
+			qbcli.SetOptionFromArg(variableSetCfg, args, 1, "variable-value")
 		}
 		return
 	},

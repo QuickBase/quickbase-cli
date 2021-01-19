@@ -189,6 +189,53 @@ quickbase-cli records insert --to bqgruir7z --data '6="Another Record" 7=3'
 }
 ```
 
+### Deleting Records
+
+Example commmand that deletes the record created above:
+
+```sh
+quickbase-cli records delete --from bqgruir7z --where '6="Another Record"'
+```
+
+```json
+{
+    "numberDeleted": 1
+}
+```
+
+### Creating Relationships
+
+Example commmand that creates a relationship:
+
+```sh
+./quickbase-cli relationship create --child-table-id bqgruir7z --parent-table-id bq6qbvfbv --lookup-field-ids 6,7
+```
+
+```json
+{
+    "childTableId": "bqgruir7z",
+    "foreignKeyField": {
+        "id": 9,
+        "label": "Related Record",
+        "type": "numeric"
+    },
+    "lookupFields": [
+        {
+            "id": 6,
+            "label": "parent - text field",
+            "type": "text"
+        },
+        {
+            "id": 7,
+            "label": "parent - numeric field",
+            "type": "numeric"
+        }
+    ],
+    "id": 9,
+    "parentTableId": "bq6qbvfbv"
+}
+```
+
 ### Transforming Output
 
 [JMESPath](https://jmespath.org/) is a powerful query language for JSON. You can apply JMESPath filters to transform the output of commands to make the data easier to work with. For example, let say you want to get only a list of table names in an app sorted alphabetically. To accomplish this, you can apply a JMESPath filter using the `--filter` option to the command below:

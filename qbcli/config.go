@@ -126,6 +126,14 @@ func (c GlobalConfig) SetDefaultTableID(cfg *viper.Viper) {
 	}
 }
 
+// SetDefaultTableIDAs sets the default table in the command's configuration
+// as the key option.
+func (c GlobalConfig) SetDefaultTableIDAs(cfg *viper.Viper, key string) {
+	if tableID := c.DefaultTableID(); tableID != "" {
+		cfg.SetDefault(key, tableID)
+	}
+}
+
 // SetOptionFromArg sets an option from an argument.
 func SetOptionFromArg(cfg *viper.Viper, args []string, idx int, option string) {
 	if len(args) > idx {

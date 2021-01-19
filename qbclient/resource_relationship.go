@@ -12,7 +12,7 @@ type ListRelationshipsInput struct {
 	c *Client
 	u string
 
-	ChildTableID string `json:"-" validate:"required"`
+	ChildTableID string `json:"-" validate:"required" cliutil:"option=child-table-id"`
 }
 
 func (i *ListRelationshipsInput) url() string                  { return i.u }
@@ -38,9 +38,9 @@ type ListRelationshipsOutputMetadata struct {
 	TotalRelationships    int `json:"totalRelationships,omitempty"`
 }
 
-// GetRelationships sends a request to GET /v1/tables/{tableId}/relationships.
+// ListRelationships sends a request to GET /v1/tables/{tableId}/relationships.
 // See https://developer.quickbase.com/operation/getRelationships
-func (c *Client) GetRelationships(input *ListRelationshipsInput) (output *ListRelationshipsOutput, err error) {
+func (c *Client) ListRelationships(input *ListRelationshipsInput) (output *ListRelationshipsOutput, err error) {
 	input.c = c
 	input.u = c.URL + "/tables/" + url.PathEscape(input.ChildTableID) + "/relationships"
 	output = &ListRelationshipsOutput{}
@@ -52,7 +52,7 @@ func (c *Client) GetRelationships(input *ListRelationshipsInput) (output *ListRe
 // and gets a relationship by table ID.
 // See https://developer.quickbase.com/operation/getTable
 func (c *Client) ListRelationshipsByTableID(id string) (*ListRelationshipsOutput, error) {
-	return c.GetRelationships(&ListRelationshipsInput{ChildTableID: id})
+	return c.ListRelationships(&ListRelationshipsInput{ChildTableID: id})
 }
 
 // CreateRelationshipInput models the input sent to POST /v1/tables/{tableId}/relationship.
@@ -61,10 +61,10 @@ type CreateRelationshipInput struct {
 	c *Client
 	u string
 
-	ChildTableID    string                                  `json:"-" validate:"required"`
-	ParentTableID   string                                  `json:"parentTableId,omitempty" validate:"required"`
+	ChildTableID    string                                  `json:"-" validate:"required" cliutil:"option=child-table-id"`
+	ParentTableID   string                                  `json:"parentTableId,omitempty" validate:"required" cliutil:"option=parent-table-id"`
 	ForeignKeyField *CreateRelationshipInputForeignKeyField `json:"foreignKeyField,omitempty"`
-	LookupFieldIDs  []int                                   `json:"lookupFieldIds,omitempty"`
+	LookupFieldIDs  []int                                   `json:"lookupFieldIds,omitempty" cliutil:"option=lookup-field-ids"`
 	SummaryFields   []*RelationshipSummaryField             `json:"summaryFields,omitempty"`
 }
 
@@ -75,7 +75,7 @@ func (i *CreateRelationshipInput) encode() ([]byte, error)      { return marshal
 
 // CreateRelationshipInputForeignKeyField models the summaryFields property.
 type CreateRelationshipInputForeignKeyField struct {
-	Label string `json:"label,omitempty"`
+	Label string `json:"label,omitempty" cliutil:"option=foreign-key-label"`
 }
 
 // CreateRelationshipOutput models the output returned by POST /v1/tables/{tableId}/relationship.
@@ -105,9 +105,9 @@ type UpdateRelationshipInput struct {
 	c *Client
 	u string
 
-	ChildTableID   string                      `json:"-" validate:"required"`
-	RelationshipID int                         `json:"-" validate:"required"`
-	LookupFieldIDs []int                       `json:"lookupFieldIds,omitempty"`
+	ChildTableID   string                      `json:"-" validate:"required" cliutil:"option=child-table-id"`
+	RelationshipID int                         `json:"-" validate:"required" cliutil:"option=relationship-id"`
+	LookupFieldIDs []int                       `json:"lookupFieldIds,omitempty" cliutil:"option=lookup-field-ids"`
 	SummaryFields  []*RelationshipSummaryField `json:"summaryFields,omitempty"`
 }
 
@@ -143,8 +143,8 @@ type DeleteRelationshipInput struct {
 	c *Client
 	u string
 
-	ChildTableID   string `json:"-" validate:"required"`
-	RelationshipID int    `json:"-" validate:"required"`
+	ChildTableID   string `json:"-" validate:"required" cliutil:"option=child-table-id"`
+	RelationshipID int    `json:"-" validate:"required" cliutil:"option=relationship-id"`
 }
 
 func (i *DeleteRelationshipInput) url() string                  { return i.u }

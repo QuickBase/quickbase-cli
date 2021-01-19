@@ -10,30 +10,24 @@ import (
 
 var relationshipCreateCfg *viper.Viper
 
-// relationshipCreateCmd represents the app get command
 var relationshipCreateCmd = &cobra.Command{
 	Use:   "create",
 	Short: "Create a relationship between tables",
-	Args:  relationshipCreateCmdValidate,
+
+	Args: func(cmd *cobra.Command, args []string) (err error) {
+		if err = globalCfg.Validate(); err == nil {
+			globalCfg.SetDefaultTableIDAs(relationshipCreateCfg, "child-table-id")
+			qbcli.SetOptionFromArg(relationshipCreateCfg, args, 0, "child-table-id")
+			qbcli.SetOptionFromArg(relationshipCreateCfg, args, 1, "parent-table-id")
+		}
+		return
+	},
 
 	Run: func(cmd *cobra.Command, args []string) {
 		ctx, logger, qb := qbcli.NewClient(cmd, globalCfg)
 
-		input := &qbclient.CreateRelationshipInput{
-			ChildTableID:  relationshipCreateCfg.GetString("child-table-id"),
-			ParentTableID: relationshipCreateCfg.GetString("parent-table-id"),
-		}
-
-		if label := relationshipCreateCfg.GetString("foreign-key-label"); label == "" {
-			input.ForeignKeyField = &qbclient.CreateRelationshipInputForeignKeyField{Label: label}
-		}
-
-		// Parse the list of fields IDs.
-		fids, err := cliutil.ParseIntSlice(relationshipCreateCfg.GetString("lookup-fields"))
-		cliutil.HandleError(cmd, err, "lookup-fields option invalid")
-		if len(fids) > 0 {
-			input.LookupFieldIDs = fids
-		}
+		input := &qbclient.CreateRelationshipInput{ForeignKeyField: &qbclient.CreateRelationshipInputForeignKeyField{}}
+		qbcli.GetOptions(ctx, logger, input, relationshipCreateCfg)
 
 		output, err := qb.CreateRelationship(input)
 		qbcli.Render(ctx, logger, cmd, globalCfg, output, err)
@@ -43,32 +37,5 @@ var relationshipCreateCmd = &cobra.Command{
 func init() {
 	var flags *cliutil.Flagger
 	relationshipCreateCfg, flags = cliutil.AddCommand(relationshipCmd, relationshipCreateCmd, qbclient.EnvPrefix)
-
-	flags.String("child-table-id", "", "", "unique identifier (dbid) of the child table (required)")
-	flags.String("parent-table-id", "", "", "unique identifier (dbid) of the parent table (required)")
-	flags.String("foreign-key-label", "", "", "label for the foreign key field")
-	flags.String("lookup-fields", "", "", "ids of lookup fields in the parent table")
-}
-
-func relationshipCreateCmdValidate(cmd *cobra.Command, args []string) error {
-	if err := globalCfg.Validate(); err != nil {
-		return err
-	}
-
-	// Set the default Table ID if configured.
-	if childTableID := globalCfg.DefaultTableID(); childTableID != "" {
-		relationshipCreateCfg.SetDefault("child-table-id", childTableID)
-	}
-
-	// Use args[0] as value for the Child Table ID.
-	if len(args) > 0 {
-		relationshipCreateCfg.SetDefault("child-table-id", args[0])
-	}
-
-	// Use args[1] as value for the Parent Table ID.
-	if len(args) > 1 {
-		relationshipCreateCfg.SetDefault("parent-table-id", args[1])
-	}
-
-	return nil
+	flags.SetOptions(&qbclient.CreateRelationshipInput{ForeignKeyField: &qbclient.CreateRelationshipInputForeignKeyField{}})
 }

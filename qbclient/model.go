@@ -914,10 +914,10 @@ type RelationshipField struct {
 
 // RelationshipSummaryField models summary fields in relationship input/output.
 type RelationshipSummaryField struct {
-	SummaryFieldID   int    `json:"summaryFid,omitempty"`
-	Label            string `json:"label,omitempty"`
-	AccumulationType string `json:"accumulationType,omitempty"`
-	Where            string `json:"where,omitempty"`
+	SummaryFieldID   int    `json:"summaryFid,omitempty" cliutil:"option=field-id"`
+	Label            string `json:"label,omitempty" cliutil:"option=label"`
+	AccumulationType string `json:"accumulationType,omitempty" cliutil:"option=accumulation-type"`
+	Where            string `json:"where,omitempty" cliutil:"option=where"`
 }
 
 func relationshipPath(tid string, rid int) string {

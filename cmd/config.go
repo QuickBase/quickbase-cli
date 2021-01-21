@@ -4,7 +4,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// configCmd represents the app command
 var configCmd = &cobra.Command{
 	Use:   "config",
 	Short: "Configuration commands",

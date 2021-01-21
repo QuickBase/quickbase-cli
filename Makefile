@@ -22,10 +22,13 @@ test: install
 dist:
 	GOOS=darwin GOARCH=amd64 go build -ldflags="-s -w -X $(PKG).Version=$(VERSION)" -o ./dist/darwin/quickbase-cli
 	upx -qqq -9 ./dist/darwin/quickbase-cli
+	(cd ./dist/darwin/ && zip -X quickbase-cli.darwin.zip quickbase-cli)
 	GOOS=linux GOARCH=amd64 go build -ldflags="-s -w -X $(PKG).Version=$(VERSION)" -o ./dist/linux/quickbase-cli
 	upx -qqq -9 ./dist/linux/quickbase-cli
+	(cd ./dist/linux/ && tar -czvf quickbase-cli.linux.tgz quickbase-cli)
 	GOOS=windows GOARCH=386 go build -ldflags="-s -w -X $(PKG).Version=$(VERSION)" -o ./dist/windows/quickbase-cli.exe
 	upx -qqq -9 ./dist/windows/quickbase-cli.exe
+	(cd ./dist/windows/ && zip -X quickbase-cli.windows.zip quickbase-cli.exe)
 
 .PHONY: clean
 clean:

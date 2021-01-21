@@ -4,6 +4,10 @@ VERSION=$(shell git describe --tags)
 build:
 	go build -ldflags "-X github.com/QuickBase/quickbase-cli/qbclient.Version=$(VERSION)"
 
+.PHONY: install
+install:
+	go mod download
+
 .PHONY: test
 test: install
 	go test -v ./...

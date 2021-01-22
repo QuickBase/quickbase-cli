@@ -56,6 +56,7 @@ func (r *Record) SetValue(fid int, val *Value) {
 type Value struct {
 	Bool        bool
 	Duration    time.Duration
+	File        *File
 	Float64     float64
 	String      string
 	StringSlice []string
@@ -289,8 +290,8 @@ func NewListUserValueFromString(val string) *Value {
 }
 
 // NewFileAttachmentValue returns a new Value of the FieldFileAttachment type.
-func NewFileAttachmentValue(val string) *Value {
-	return &Value{String: val, QuickBaseType: FieldFileAttachment}
+func NewFileAttachmentValue(val *File) *Value {
+	return &Value{File: val, QuickBaseType: FieldFileAttachment}
 }
 
 // NewReportLinkValue returns a new Value of the FieldReportLink type.
@@ -416,7 +417,7 @@ func NewValueFromString(val, ftype string) (v *Value, err error) {
 		v = NewListUserValueFromString(val)
 
 	case FieldFileAttachment:
-		v = NewFileAttachmentValue(val)
+		err = errors.New("cannot create file attachment field from string")
 
 	case FieldReportLink:
 		v = NewReportLinkValue(val)
@@ -494,9 +495,8 @@ func (v *Value) MarshalJSON() ([]byte, error) {
 	case FieldUserList:
 		return json.Marshal(v.UserSlice)
 
-	// TODO revisit when re-added.
 	case FieldFileAttachment:
-		return json.Marshal(v.String)
+		return json.Marshal(v.File)
 
 	case FieldReportLink:
 		return json.Marshal(v.String)
@@ -664,11 +664,11 @@ func unmarshalField(fid int, ftype string, data *json.RawMessage) (val *Value, e
 		}
 
 	case FieldFileAttachment:
-		var v string
+		var v *File
 		if data == nil {
-			val = NewEmailAddressValue(v)
+			val = NewFileAttachmentValue(v)
 		} else if err = json.Unmarshal(*data, &v); err == nil {
-			val = NewEmailAddressValue(v)
+			val = NewFileAttachmentValue(v)
 		}
 
 	case FieldReportLink:
@@ -822,6 +822,27 @@ type User struct {
 	ID    string `json:"id"`
 	Email string `json:"email"`
 	Name  string `json:"name"`
+}
+
+// File models a file attachment.
+type File struct {
+	URL     string         `json:"url,omitempty"`
+	Version []*FileVersion `json:"versions,omitempty"`
+}
+
+// FileVersion models the "version" property.
+type FileVersion struct {
+	Creator  *FileCreator `json:"creator"`
+	FileName string       `json:"name"`
+	Uploaded *Timestamp   `json:"uploaded"`
+	Version  int          `json:"versionNumber"`
+}
+
+// FileCreator models the "version.creator" property.
+type FileCreator struct {
+	Email  string `json:"email"`
+	Name   string `json:"name"`
+	UserID string `json:"id"`
 }
 
 //

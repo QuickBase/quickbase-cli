@@ -139,7 +139,7 @@ func (c *Client) UpdatePage(input *UpdatePageInput) (output *UpdatePageOutput, e
 	if input.PageID != 0 || input.Name != "" {
 		err = c.Do(input, output)
 	} else {
-		err = qberrors.Client(nil).Safef(qberrors.BadRequest, "ID or name required")
+		err = qberrors.Client(nil).Safef(qberrors.BadRequest, "%s", "ID or name required")
 	}
 	return
 }

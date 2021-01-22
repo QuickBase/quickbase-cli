@@ -4,7 +4,7 @@ go 1.15
 
 require (
 	github.com/araddon/dateparse v0.0.0-20201001162425-8aadafed4dc4
-	github.com/cpliakas/cliutil v0.2.0
+	github.com/cpliakas/cliutil v0.2.1
 	github.com/go-playground/validator/v10 v10.4.1
 	github.com/hashicorp/go-retryablehttp v0.6.8
 	github.com/leodido/go-urn v1.2.1 // indirect

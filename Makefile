@@ -16,6 +16,10 @@ test: install
 dist:
 	goreleaser --snapshot --skip-publish --rm-dist
 
+.PHONY: tidy
+tidy:
+	go mod tidy
+
 .PHONY: clean
 clean:
 	rm -f quickbase-cli

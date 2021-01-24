@@ -9,7 +9,7 @@ install:
 	go mod download
 
 .PHONY: test
-test: install
+test:
 	go test -v ./...
 
 .PHONY: dist

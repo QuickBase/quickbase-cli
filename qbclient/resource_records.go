@@ -124,33 +124,10 @@ type QueryRecordsInputSortBy struct {
 // See https://developer.quickbase.com/operation/runQuery
 type QueryRecordsOutput struct {
 	ErrorProperties
-
-	Data     []map[int]*QueryRecordsOutputData `json:"data,omitempty"`
-	Fields   []*QueryRecordsOutputFields       `json:"fields,omitempty"`
-	Metadata *QueryRecordsOutputMetadata       `json:"metadata,omitempty"`
+	Records
 }
 
 func (o *QueryRecordsOutput) decode(body io.ReadCloser) error { return unmarshalJSON(body, &o) }
-
-// QueryRecordsOutputData models objects in the data property.
-type QueryRecordsOutputData struct {
-	Value *Value `json:"value"`
-}
-
-// QueryRecordsOutputFields models the objects in the fields property.
-type QueryRecordsOutputFields struct {
-	FieldID int    `json:"id"`
-	Label   string `json:"label"`
-	Type    string `json:"type"`
-}
-
-// QueryRecordsOutputMetadata models the metadata property.
-type QueryRecordsOutputMetadata struct {
-	TotalRecords int `json:"totalRecords"`
-	NumRecords   int `json:"numRecords"`
-	NumFields    int `json:"numFields"`
-	Skip         int `json:"skip"`
-}
 
 // QueryRecords sends a request to POST /v1/records/query.
 // See https://developer.quickbase.com/operation/runQuery

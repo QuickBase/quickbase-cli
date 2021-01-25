@@ -105,7 +105,6 @@ func (c *Client) Do(input Input, output Output) error {
 	// an error is thrown outside of the API's control plane, e.g., from
 	// Cloudflare, which might not produce parsable output.
 	if err := output.decode(resp.Body); err != nil {
-		fmt.Println(err)
 		switch true {
 		case resp.StatusCode >= 200 && resp.StatusCode < 300:
 			serr := qberrors.ErrSafe{Message: "error decoding response"}

@@ -26,7 +26,7 @@ var recordsQueryCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		ctx, logger, qb := qbcli.NewClient(cmd, globalCfg)
 
-		input := &qbclient.QueryRecordsInput{}
+		input := &qbclient.QueryRecordsInput{Options: &qbclient.QueryRecordsInputOptions{}}
 		qbcli.GetOptions(ctx, logger, input, recordsQueryCfg)
 
 		output, err := qb.QueryRecords(input)
@@ -37,5 +37,5 @@ var recordsQueryCmd = &cobra.Command{
 func init() {
 	var flags *cliutil.Flagger
 	recordsQueryCfg, flags = cliutil.AddCommand(recordsCmd, recordsQueryCmd, qbclient.EnvPrefix)
-	flags.SetOptions(&qbclient.QueryRecordsInput{})
+	flags.SetOptions(&qbclient.QueryRecordsInput{Options: &qbclient.QueryRecordsInputOptions{}})
 }

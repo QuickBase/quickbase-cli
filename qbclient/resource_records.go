@@ -101,6 +101,7 @@ type QueryRecordsInput struct {
 	Where   string                      `json:"where" cliutil:"option=where func=query"`
 	GroupBy []*QueryRecordsInputGroupBy `json:"groupBy,omitempty" cliutil:"option=group-by func=group"`
 	SortBy  []*QueryRecordsInputSortBy  `json:"sortBy,omitempty" cliutil:"option=sort-by func=sort"`
+	Options *QueryRecordsInputOptions   `json:"options,omitempty"`
 }
 
 func (i *QueryRecordsInput) url() string                  { return i.u }
@@ -118,6 +119,13 @@ type QueryRecordsInputGroupBy struct {
 type QueryRecordsInputSortBy struct {
 	FieldID int    `json:"fieldId"`
 	Order   string `json:"order"`
+}
+
+// QueryRecordsInputOptions models the options object.
+type QueryRecordsInputOptions struct {
+	Skip       int  `json:"skip" cliutil:"option=skip"`
+	Top        int  `json:"top" cliutil:"option=top"`
+	UseAppTime bool `json:"compareWithAppLocalTime" cliutil:"option=use-app-time"`
 }
 
 // QueryRecordsOutput models the output returned by POST /v1/records/query.

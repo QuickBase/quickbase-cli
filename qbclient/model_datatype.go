@@ -2,6 +2,7 @@ package qbclient
 
 import (
 	"bytes"
+	"encoding/csv"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -18,18 +19,105 @@ var ErrInvalidType = errors.New("field type invalid")
 // Value models the value of fields in Quick Base. This struct effectively
 // handles the Quick base field type / Golang type transformations.
 type Value struct {
-	Bool        bool
-	Duration    time.Duration
-	File        *File
-	Float64     float64
-	String      string
-	StringSlice []string
-	Time        time.Time
-	URL         *url.URL
-	User        *User
-	UserSlice   []*User
+	Bool      bool
+	Duration  time.Duration
+	File      *File
+	Float64   float64
+	Str       string
+	StrSlice  []string
+	Time      time.Time
+	URL       *url.URL
+	User      *User
+	UserSlice []*User
 
 	QuickBaseType string
+}
+
+// String returns Value as a string.
+func (v *Value) String() string {
+	switch v.QuickBaseType {
+
+	case FieldRecordID:
+		return fmt.Sprint(v.Float64)
+
+	case FieldText, FieldTextMultiLine, FieldTextMultipleChoice, FieldRichText:
+		// Also picks up:
+		// FieldAddressStreet1, FieldAddressStreet2, FieldAddressCity,
+		// FieldAddressStateRegion, FieldAddressPostalCode, and
+		// FieldAddressCountry
+		return v.Str
+
+	case FieldMultiSelectText:
+		return writeCSV(v.StrSlice)
+
+	case FieldNumeric, FieldNumericCurrency, FieldNumericPercent, FieldNumericRating:
+		return fmt.Sprint(v.Float64)
+
+	case FieldDate:
+		return v.Time.UTC().Format(FormatDate)
+
+	case FieldDateTime:
+		return v.Time.UTC().Format(FormatDateTime)
+
+	case FieldTimeOfDay:
+		return v.Time.UTC().Format(FormatTimeOfDay)
+
+	case FieldDuration:
+		return fmt.Sprint(v.Duration.Milliseconds())
+
+	case FieldCheckbox:
+		return fmt.Sprintf("%t", v.Bool)
+
+	case FieldAddress:
+		return v.Str
+
+	case FieldPhoneNumber:
+		return v.Str
+
+	case FieldEmailAddress:
+		return v.Str
+
+	case FieldUser:
+		return v.User.ID
+
+	case FieldUserList:
+		s := make([]string, len(v.UserSlice))
+		for idx, u := range v.UserSlice {
+			s[idx] = u.ID
+		}
+		return writeCSV(s)
+
+	case FieldFileAttachment:
+		return v.File.URL
+
+	case FieldReportLink:
+		return v.Str
+
+	case FieldURL:
+		return v.URL.String()
+
+	// Deprecated
+	case FieldiCalendar:
+		return v.Str
+
+	// Deprecated
+	case FieldvCard:
+		return v.Str
+
+	case FieldPredecessor:
+		return v.Str
+
+	default:
+		return ""
+	}
+}
+
+func writeCSV(s []string) string {
+	buf := bytes.NewBuffer([]byte(``))
+	w := csv.NewWriter(buf)
+	w.Write(s)
+	w.Flush()
+	return buf.String()
 }
 
 // Timestamp models a Quickbase timestamp.
@@ -123,27 +211,27 @@ func NewRecordIDValue(val float64) *Value {
 
 // NewTextValue returns a new Value of the FieldText type.
 func NewTextValue(val string) *Value {
-	return &Value{String: val, QuickBaseType: FieldText}
+	return &Value{Str: val, QuickBaseType: FieldText}
 }
 
 // NewTextMultiLineValue returns a new Value of the FieldTextMultiLine type.
 func NewTextMultiLineValue(val string) *Value {
-	return &Value{String: val, QuickBaseType: FieldTextMultiLine}
+	return &Value{Str: val, QuickBaseType: FieldTextMultiLine}
 }
 
 // NewTextMultipleChoiceValue returns a new Value of the FieldTextMultipleChoice type.
 func NewTextMultipleChoiceValue(val string) *Value {
-	return &Value{String: val, QuickBaseType: FieldTextMultipleChoice}
+	return &Value{Str: val, QuickBaseType: FieldTextMultipleChoice}
 }
 
 // NewRichTextValue returns a new Value of the FieldRichText type.
 func NewRichTextValue(val string) *Value {
-	return &Value{String: val, QuickBaseType: FieldRichText}
+	return &Value{Str: val, QuickBaseType: FieldRichText}
 }
 
 // NewMultiSelectTextValue returns a new Value of the FieldMultiSelectText type.
 func NewMultiSelectTextValue(val []string) *Value {
-	return &Value{StringSlice: val, QuickBaseType: FieldMultiSelectText}
+	return &Value{StrSlice: val, QuickBaseType: FieldMultiSelectText}
 }
 
 // NewMultiSelectTextValueFromString returns a new Value of the FieldMultiSelectText
@@ -272,47 +360,47 @@ func NewCheckboxValueFromString(val string) (v *Value, err error) {
 
 // NewAddressValue returns a new Value of the FieldAddress type.
 func NewAddressValue(val string) *Value {
-	return &Value{String: val, QuickBaseType: FieldAddress}
+	return &Value{Str: val, QuickBaseType: FieldAddress}
 }
 
 // NewAddressStreet1Value returns a new Value of the FieldAddressStreet1 type.
 func NewAddressStreet1Value(val string) *Value {
-	return &Value{String: val, QuickBaseType: FieldAddressStreet1}
+	return &Value{Str: val, QuickBaseType: FieldAddressStreet1}
 }
 
 // NewAddressStreet2Value returns a new Value of the FieldAddressStreet2 type.
 func NewAddressStreet2Value(val string) *Value {
-	return &Value{String: val, QuickBaseType: FieldAddressStreet2}
+	return &Value{Str: val, QuickBaseType: FieldAddressStreet2}
 }
 
 // NewAddressCityValue returns a new Value of the FieldAddressCity type.
 func NewAddressCityValue(val string) *Value {
-	return &Value{String: val, QuickBaseType: FieldAddressCity}
+	return &Value{Str: val, QuickBaseType: FieldAddressCity}
 }
 
 // NewAddressStateRegionValue returns a new Value of the FieldAddressStateRegion type.
 func NewAddressStateRegionValue(val string) *Value {
-	return &Value{String: val, QuickBaseType: FieldAddressStateRegion}
+	return &Value{Str: val, QuickBaseType: FieldAddressStateRegion}
 }
 
 // NewAddressPostalCodeValue returns a new Value of the FieldAddressPostalCode type.
 func NewAddressPostalCodeValue(val string) *Value {
-	return &Value{String: val, QuickBaseType: FieldAddressPostalCode}
+	return &Value{Str: val, QuickBaseType: FieldAddressPostalCode}
 }
 
 // NewAddressCountryValue returns a new Value of the FieldAddressCountry type.
 func NewAddressCountryValue(val string) *Value {
-	return &Value{String: val, QuickBaseType: FieldAddressCountry}
+	return &Value{Str: val, QuickBaseType: FieldAddressCountry}
 }
 
 // NewPhoneNumberValue returns a new Value of the FieldPhoneNumber type.
 func NewPhoneNumberValue(val string) *Value {
-	return &Value{String: val, QuickBaseType: FieldPhoneNumber}
+	return &Value{Str: val, QuickBaseType: FieldPhoneNumber}
 }
 
 // NewEmailAddressValue returns a new Value of the FieldEmailAddress type.
 func NewEmailAddressValue(val string) *Value {
-	return &Value{String: val, QuickBaseType: FieldEmailAddress}
+	return &Value{Str: val, QuickBaseType: FieldEmailAddress}
 }
 
 // NewUserValue returns a new Value of the FieldUser type.
@@ -344,7 +432,7 @@ func NewFileAttachmentValue(val *File) *Value {
 
 // NewReportLinkValue returns a new Value of the FieldReportLink type.
 func NewReportLinkValue(val string) *Value {
-	return &Value{String: val, QuickBaseType: FieldReportLink}
+	return &Value{Str: val, QuickBaseType: FieldReportLink}
 }
 
 // NewURLValue returns a new Value of the FieldURL type.
@@ -364,18 +452,18 @@ func NewURLValueFromString(val string) (v *Value, err error) {
 // NewiCalendarValue returns a new Value of the FieldiCalendar type.
 // Make this a URL?
 func NewiCalendarValue(val string) *Value {
-	return &Value{String: val, QuickBaseType: FieldiCalendar}
+	return &Value{Str: val, QuickBaseType: FieldiCalendar}
 }
 
 // NewvCardValue returns a new Value of the FieldvCard type.
 // Make this a URL?
 func NewvCardValue(val string) *Value {
-	return &Value{String: val, QuickBaseType: FieldvCard}
+	return &Value{Str: val, QuickBaseType: FieldvCard}
 }
 
 // NewPredecessorValue returns a new Value of the FieldPredecessor type.
 func NewPredecessorValue(val string) *Value {
-	return &Value{String: val, QuickBaseType: FieldPredecessor}
+	return &Value{Str: val, QuickBaseType: FieldPredecessor}
 }
 
 type dateparseFn func(string, ...dateparse.ParserOption) (time.Time, error)
@@ -502,10 +590,10 @@ func (v *Value) MarshalJSON() ([]byte, error) {
 		// FieldAddressStreet1, FieldAddressStreet2, FieldAddressCity,
 		// FieldAddressStateRegion, FieldAddressPostalCode, and
 		// FieldAddressCountry
-		return json.Marshal(v.String)
+		return json.Marshal(v.Str)
 
 	case FieldMultiSelectText:
-		return json.Marshal(v.StringSlice)
+		return json.Marshal(v.StrSlice)
 
 	case FieldNumeric, FieldNumericCurrency, FieldNumericPercent, FieldNumericRating:
 		return json.Marshal(v.Float64)
@@ -529,13 +617,13 @@ func (v *Value) MarshalJSON() ([]byte, error) {
 		return json.Marshal(v.Bool)
 
 	case FieldAddress:
-		return json.Marshal(v.String)
+		return json.Marshal(v.Str)
 
 	case FieldPhoneNumber:
-		return json.Marshal(v.String)
+		return json.Marshal(v.Str)
 
 	case FieldEmailAddress:
-		return json.Marshal(v.String)
+		return json.Marshal(v.Str)
 
 	case FieldUser:
 		return json.Marshal(v.User)
@@ -547,21 +635,21 @@ func (v *Value) MarshalJSON() ([]byte, error) {
 		return json.Marshal(v.File)
 
 	case FieldReportLink:
-		return json.Marshal(v.String)
+		return json.Marshal(v.Str)
 
 	case FieldURL:
 		return json.Marshal(v.URL.String())
 
 	// Deprecated
 	case FieldiCalendar:
-		return json.Marshal(v.String)
+		return json.Marshal(v.Str)
 
 	// Deprecated
 	case FieldvCard:
-		return json.Marshal(v.String)
+		return json.Marshal(v.Str)
 
 	case FieldPredecessor:
-		return json.Marshal(v.String)
+		return json.Marshal(v.Str)
 
 	default:
 		return []byte(``), fmt.Errorf("%s: %w", v.QuickBaseType, ErrInvalidType)

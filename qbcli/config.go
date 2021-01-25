@@ -15,6 +15,7 @@ import (
 // Option* constants contain CLI options.
 const (
 	OptionDumpDirectory  = "dump-dir"
+	OptionFormat         = "format"
 	OptionJMESPathFilter = "filter"
 	OptionLogFile        = "log-file"
 	OptionLogLevel       = "log-level"
@@ -35,6 +36,7 @@ func NewGlobalConfig(cmd *cobra.Command, cfg *viper.Viper) GlobalConfig {
 	flags := cliutil.NewFlagger(cmd, cfg)
 
 	flags.PersistentString(OptionDumpDirectory, "d", "", "directory for files that request/response are dumped to for debugging")
+	flags.PersistentString(OptionFormat, "", "", "display data in an alternate format, e.g., table")
 	flags.PersistentString(OptionJMESPathFilter, "F", "", "JMESPath filter applied to output")
 	flags.PersistentString(OptionLogFile, "f", "", "file log messages are written to")
 	flags.PersistentString(OptionLogLevel, "l", cliutil.LogNotice, "minimum log level")
@@ -66,6 +68,9 @@ func (c GlobalConfig) DefaultTableID() string { return c.cfg.GetString(qbclient.
 
 // DumpDirectory returns the configured dump file directory.
 func (c GlobalConfig) DumpDirectory() string { return c.cfg.GetString(OptionDumpDirectory) }
+
+// Format returns the configured output format, e.g., table. No config == JSON.
+func (c GlobalConfig) Format() string { return c.cfg.GetString(OptionFormat) }
 
 // JMESPathFilter returns the JMESPath filter.
 func (c GlobalConfig) JMESPathFilter() string { return c.cfg.GetString(OptionJMESPathFilter) }

@@ -20,21 +20,26 @@ The Quickbase CLI consumes Quickbase's APIs, so the commands should feel familia
   * Simple Query syntax (e.g., `--where 3=2`, `--where 2` which both equal `--where {'3'.EX.'2'}`)
   * Natural language processing for various data types, e.g., dates, durations, and addresses (planned).
 
-## Installation
-
-Download the latest binary for your platform from the [Releases](https://github.com/QuickBase/quickbase-cli/releases) section to a directory that is in your system's [PATH](https://en.wikipedia.org/wiki/PATH_(variable)).
-
-### Building From Source
-
-With a [correctly configured](https://golang.org/doc/install#install) Go toolchain:
-
-```sh
-go get github.com/QuickBase/quickbase-cli
-```
 
 ## Support
 
 The Quickbase CLI is an open source project supported by the community, and it does not fall under the purview of Quickbase Support entitlements. Please use [GitHub issues](https://docs.github.com/en/github/managing-your-work-on-github/about-issues) for bugs, questions, and enhancement requests.
+
+## Installation
+
+Download and extract the latest release for your platform from the [Releases](https://github.com/QuickBase/quickbase-cli/releases) section. Copy the binary to a directory that is in your system's [PATH](https://en.wikipedia.org/wiki/PATH_(variable)).
+
+### Building From Source
+
+With a [correctly configured](https://golang.org/doc/install#install) Go toolchain, clone the repository to a directory of your chosing, and run `make`:
+
+```sh
+git clone https://github.com/QuickBase/quickbase-cli.git
+cd ./quickbase-cli
+make
+```
+
+Run `make` in favor of `go build` because the version is set from git through linker flags, which the default `make build` target does automatically.
 
 ## Configuration
 
@@ -160,6 +165,8 @@ quickbase-cli records query --select 6,7,8 --from bqgruir7z --where '{3.EX.2}'
 }
 ```
 
+#### Simplified Query Filters
+
 You can also use simplified query syntax for basic queries. The following command queries for records where field 6 equals "Record One" and field 7 equals 2:
 
 ```sh
@@ -171,6 +178,20 @@ Just passing a number will find a record by its ID:
 ```sh
 quickbase-cli records query --select 6,7,8 --from bqgruir7z --where 2
 ```
+
+#### Record Output Formatting
+
+Passing `--format table` for commands that return records will render the output as a table instead of JSON.
+
+```
++------------+--------+---------+
+| TITLE      | NUMBER | LIST    |
++------------+--------+---------+
+| Record Two | 2      | One,Two |
++------------+--------+---------+
+```
+
+Over valid options for `--format` are `csv` and `markdown`.
 
 ### Creating Records
 

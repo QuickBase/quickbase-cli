@@ -191,7 +191,7 @@ Passing `--format table` for commands that return records will render the output
 +------------+--------+---------+
 ```
 
-Over valid options for `--format` are `csv` and `markdown`.
+Other valid options for `--format` are `csv`, `markdown`.
 
 ### Creating Records
 

@@ -31,7 +31,7 @@ Download and extract the latest release for your platform from the [Releases](ht
 
 ### Building From Source
 
-With a [correctly configured](https://golang.org/doc/install#install) Go toolchain, clone the repository to a directory of your chosing, and run `make`:
+With a [correctly configured](https://golang.org/doc/install#install) Go toolchain, clone the repository to a directory of your choosing, change into it, and run `make`:
 
 ```sh
 git clone https://github.com/QuickBase/quickbase-cli.git
@@ -39,7 +39,7 @@ cd ./quickbase-cli
 make
 ```
 
-Run `make` in favor of `go build` because the version is set from git through linker flags, which the default `make build` target does automatically.
+Run `make` in favor of `go build` because the version is set through linker flags, which the default `make build` target does automatically.
 
 ## Configuration
 

@@ -17,7 +17,7 @@ import (
 var ErrInvalidType = errors.New("field type invalid")
 
 // Value models the value of fields in Quick Base. This struct effectively
-// handles the Quick base field type / Golang type transformations.
+// handles the Quickbase field type / Golang type transformations.
 type Value struct {
 	Bool      bool
 	Duration  time.Duration
@@ -38,7 +38,7 @@ func (v *Value) String() string {
 	switch v.QuickBaseType {
 
 	case FieldRecordID:
-		return fmt.Sprint(v.Float64)
+		return strconv.FormatFloat(v.Float64, 'f', -1, 64)
 
 	case FieldText, FieldTextMultiLine, FieldTextMultipleChoice, FieldRichText:
 		// Also picks up:
@@ -51,7 +51,7 @@ func (v *Value) String() string {
 		return writeCSV(v.StrSlice)
 
 	case FieldNumeric, FieldNumericCurrency, FieldNumericPercent, FieldNumericRating:
-		return fmt.Sprint(v.Float64)
+		return strconv.FormatFloat(v.Float64, 'f', -1, 64)
 
 	case FieldDate:
 		return v.Time.UTC().Format(FormatDate)

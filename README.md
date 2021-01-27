@@ -27,9 +27,26 @@ The Quickbase CLI is an open source project supported by the community, and it d
 
 ## Installation
 
+### Mac OSX
+
+We recommend using [Homebrew](https://brew.sh/) to install the Quickbase CLI.
+
+```sh
+brew tap QuickBase/tap
+brew install quickbase-cli
+```
+
+Verify the installation:
+
+```sh
+quickbase-cli version
+```
+
+### All Platforms
+
 Download and extract the latest release for your platform from the [Releases](https://github.com/QuickBase/quickbase-cli/releases) section. Copy the binary to a directory that is in your system's [PATH](https://en.wikipedia.org/wiki/PATH_(variable)).
 
-### Building From Source
+### Build From Source
 
 With a [correctly configured](https://golang.org/doc/install#install) Go toolchain, clone the repository to a directory of your choosing, change into it, and run `make`:
 

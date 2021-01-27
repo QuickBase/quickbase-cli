@@ -34,3 +34,18 @@ changelog:
     exclude:
       - '^docs:'
       - '^test:'
+
+brews:
+  -
+    homepage: "https://github.com/QuickBase/quickbase-cli"
+    description: "A Command Line Interface (CLI) to manage your Quickbase applications."
+    folder: Formula
+    license: "MIT"
+
+    tap:
+      owner: QuickBase
+      name: homebrew-tap
+
+    commit_author:
+      name: qb-github-homebrew
+      email: sregithubhomebrew@quickbase.com

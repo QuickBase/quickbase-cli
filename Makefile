@@ -23,4 +23,4 @@ tidy:
 .PHONY: clean
 clean:
 	rm -f quickbase-cli
-	rm -f dist
+	rm -rf dist

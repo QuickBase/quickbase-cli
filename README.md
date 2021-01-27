@@ -233,7 +233,7 @@ quickbase-cli records delete --from bqgruir7z --where '6="Another Record"'
 Example commmand that creates a relationship:
 
 ```sh
-./quickbase-cli relationship create --child-table-id bqgruir7z --parent-table-id bq6qbvfbv --lookup-field-ids 6,7
+quickbase-cli relationship create --child-table-id bqgruir7z --parent-table-id bq6qbvfbv --lookup-field-ids 6,7
 ```
 
 ```json

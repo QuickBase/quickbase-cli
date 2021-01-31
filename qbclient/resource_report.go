@@ -5,6 +5,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"strconv"
 )
 
 // GetReportInput models the input sent to GET /v1/reports/{reportId}?tableId={tableId}.
@@ -123,6 +124,12 @@ func (o *RunReportOutput) decode(body io.ReadCloser) error { return unmarshalJSO
 func (c *Client) RunReport(input *RunReportInput) (output *RunReportOutput, err error) {
 	input.c = c
 	input.u = c.URL + "/reports/" + url.PathEscape(input.ReportID) + "/run?tableId=" + url.QueryEscape(input.TableID)
+	if input.Skip != 0 {
+		input.u += "&skip=" + strconv.Itoa(input.Skip)
+	}
+	if input.Top != 0 {
+		input.u += "&top=" + strconv.Itoa(input.Top)
+	}
 	output = &RunReportOutput{}
 	err = c.Do(input, output)
 	return

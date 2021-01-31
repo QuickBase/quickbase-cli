@@ -32,7 +32,7 @@ The Quickbase CLI is an open source project supported by the community, and it d
 We recommend using [Homebrew](https://brew.sh/) to install the Quickbase CLI.
 
 ```sh
-brew tap QuickBase/tap
+brew tap quickbase/tap
 brew install quickbase-cli
 ```
 
@@ -107,7 +107,7 @@ quickbase-cli records delete --where '6="Another Record"'
 
 ### Command Format
 
-Exmaple command that gets an app definition:
+Commands follow the traditional `APP COMMANDS ARGS --FLAGS` pattern. See the exmaple command below that gets an app definition:
 
 ```sh
 quickbase-cli app get --app-id bqgruir3g
@@ -132,7 +132,7 @@ quickbase-cli app get --app-id bqgruir3g
 
 ### Querying For Records
 
-Example command that queries for records (where Record #ID is 2):
+Example command that queries for records, returning fields 6 throguh 8 where Record #ID equals 2:
 
 ```sh
 quickbase-cli records query --select 6,7,8 --from bqgruir7z --where '{3.EX.2}'
@@ -182,18 +182,22 @@ quickbase-cli records query --select 6,7,8 --from bqgruir7z --where '{3.EX.2}'
 }
 ```
 
+#### Field Ranges
+
+In the examples above, `--select 6:8` is equivalent to `--select 6,7,8`. You can also combine the explicit fields and ranges, where `--select 1,3:5` is equal to `--select 1,3,4,5`.
+
 #### Simplified Query Filters
 
 You can also use simplified query syntax for basic queries. The following command queries for records where field 6 equals "Record One" and field 7 equals 2:
 
 ```sh
-quickbase-cli records query --select 6,7,8 --from bqgruir7z --where '6="Record Two" 7=2'
+quickbase-cli records query --select 6:8 --from bqgruir7z --where '6="Record Two" 7=2'
 ```
 
 Just passing a number will find a record by its ID:
 
 ```sh
-quickbase-cli records query --select 6,7,8 --from bqgruir7z --where 2
+quickbase-cli records query --select 6:8 --from bqgruir7z --where 2
 ```
 
 #### Record Output Formatting

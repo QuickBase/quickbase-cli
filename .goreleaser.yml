@@ -37,8 +37,8 @@ changelog:
 
 brews:
   -
-    homepage: "https://github.com/QuickBase/quickbase-cli"
-    description: "A Command Line Interface (CLI) to manage your Quickbase applications."
+    homepage: https://github.com/QuickBase/quickbase-cli
+    description: A Command Line Interface (CLI) to manage your Quickbase applications.
     folder: Formula
     license: "MIT"
 
@@ -49,3 +49,14 @@ brews:
     commit_author:
       name: qb-github-homebrew
       email: sregithubhomebrew@quickbase.com
+
+nfpms:
+  - file_name_template: '{{ .ProjectName }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
+    homepage: https://github.com/QuickBase/quickbase-cli
+    description: A Command Line Interface (CLI) to manage your Quickbase applications.
+    maintainer: Quickbase <sregithubhomebrew@quickbase.com>
+    license: MIT
+    vendor: Quickbase
+    formats:
+    - deb
+    - rpm

@@ -1,4 +1,5 @@
 
+[![GitHub release](https://img.shields.io/github/release/QuickBase/quickbase-cli.svg)](https://github.com/QuickBase/quickbase-cli/releases/)
 [![Go Reference](https://pkg.go.dev/badge/github.com/QuickBase/quickbase-cli.svg)](https://pkg.go.dev/github.com/QuickBase/quickbase-cli)
 [![Go Report Card](https://goreportcard.com/badge/github.com/QuickBase/quickbase-cli)](https://goreportcard.com/report/github.com/QuickBase/quickbase-cli)
 

@@ -5,6 +5,8 @@ go 1.15
 require (
 	github.com/araddon/dateparse v0.0.0-20201001162425-8aadafed4dc4
 	github.com/cpliakas/cliutil v0.2.3
+	github.com/go-playground/locales v0.13.0
+	github.com/go-playground/universal-translator v0.17.0
 	github.com/go-playground/validator/v10 v10.4.1
 	github.com/hashicorp/go-retryablehttp v0.6.8
 	github.com/jedib0t/go-pretty/v6 v6.0.6

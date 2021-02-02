@@ -109,5 +109,5 @@ func ParseGroupBy(s string) (groupBy []*qbclient.QueryRecordsInputGroupBy, err e
 
 func init() {
 	reSortBy = regexp.MustCompile(`^\s*(\d+)(?:\s+(ASC|DESC)?\s*)?$`)
-	reGroupBy = regexp.MustCompile(`^\s*(\d+)(?:\s+([-A-Za-z0-9_]+)?\s*)?$`)
+	reGroupBy = regexp.MustCompile(`^\s*(\d+)(?:\s+(ASC|DESC|equal-values)?\s*)?$`)
 }

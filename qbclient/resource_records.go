@@ -14,7 +14,7 @@ type InsertRecordsInput struct {
 	Data           []map[int]*InsertRecordsInputData `json:"data" validate:"required,min=1" cliutil:"option=data func=record"`
 	To             string                            `json:"to" validate:"required" cliutil:"option=to"`
 	MergeFieldID   int                               `json:"mergeFieldId,omitempty" cliutil:"option=merge-field-id"`
-	FieldsToReturn []int                             `json:"fieldsToReturn,omitempty" cliutil:"option=fields-to-return"`
+	FieldsToReturn []int                             `json:"fieldsToReturn,omitempty" cliutil:"option=fields-to-return "`
 }
 
 func (i *InsertRecordsInput) url() string                  { return i.u }

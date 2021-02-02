@@ -32,8 +32,8 @@ github.com/coreos/etcd v3.3.13+incompatible/go.mod h1:uF7uidLiAD3TWHmW31ZFd/JWoc
 github.com/coreos/go-semver v0.3.0/go.mod h1:nnelYz7RCh+5ahJtPPxZlU+153eP4D4r3EedlOD2RNk=
 github.com/coreos/go-systemd v0.0.0-20190321100706-95778dfbb74e/go.mod h1:F5haX7vjVVG0kc13fIWeqUViNPyEJxv/OmvnBo0Yme4=
 github.com/coreos/pkg v0.0.0-20180928190104-399ea9e2e55f/go.mod h1:E3G3o1h8I7cfcXa63jLwjI0eiQQMgzzUDFVpN/nH/eA=
-github.com/cpliakas/cliutil v0.2.2 h1:9KwIEAzAnqlimEmIddNZdDjvbnv3D3EgydmVjcXkK5I=
-github.com/cpliakas/cliutil v0.2.2/go.mod h1:rHiqeBXCXOikDmm+tpmBGY/afxRNWGfTr9D7dx217e4=
+github.com/cpliakas/cliutil v0.2.3 h1:mb91difRwnG9A9p8+pNMXCvTuzku/d3cNl2rCClaLBc=
+github.com/cpliakas/cliutil v0.2.3/go.mod h1:rHiqeBXCXOikDmm+tpmBGY/afxRNWGfTr9D7dx217e4=
 github.com/cpuguy83/go-md2man/v2 v2.0.0/go.mod h1:maD7wRr/U5Z6m/iR4s+kqSMx2CaBsrgA7czyZG/E6dU=
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=

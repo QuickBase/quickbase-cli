@@ -89,8 +89,8 @@ type UpdateAppInput struct {
 	u string
 
 	AppID       string      `json:"-" validate:"required" cliutil:"option=app-id"`
-	Name        string      `json:"name,omitempty" cliutil:"option=name usage='name of the app'"`
-	Description string      `json:"description,omitempty" cliutil:"option=description usage='description of the app'"`
+	Name        string      `json:"name,omitempty" cliutil:"option=name"`
+	Description string      `json:"description,omitempty" cliutil:"option=description"`
 	Variable    []*Variable `json:"variables,omitempty"`
 }
 
@@ -125,7 +125,7 @@ type DeleteAppInput struct {
 	u string
 
 	AppID string `json:"-" validate:"required" cliutil:"option=app-id"`
-	Name  string `json:"name" validate:"required" cliutil:"option=name usage='name of the app'"`
+	Name  string `json:"name" validate:"required" cliutil:"option=name"`
 }
 
 func (i *DeleteAppInput) url() string                  { return i.u }
@@ -220,9 +220,9 @@ type CopyAppInput struct {
 	c *Client
 	u string
 
-	AppID       string                  `json:"-" validate:"required" cliutil:"option=app-id usage='unique identifier of an app'"`
-	Name        string                  `json:"name" validate:"required" cliutil:"option=name usage='name of the app'"`
-	Description string                  `json:"description,omitempty" cliutil:"option=description usage='description of the app'"`
+	AppID       string                  `json:"-" validate:"required" cliutil:"option=app-id"`
+	Name        string                  `json:"name" validate:"required" cliutil:"option=name"`
+	Description string                  `json:"description,omitempty" cliutil:"option=description"`
 	Properties  *CopyAppInputProperties `json:"properties,omitempty"`
 }
 
@@ -233,10 +233,10 @@ func (i *CopyAppInput) encode() ([]byte, error)      { return marshalJSON(i) }
 
 // CopyAppInputProperties models the properties property.
 type CopyAppInputProperties struct {
-	AssignUserToken   bool `json:"assignUserToken,omitempty" cliutil:"option=assign-token usage='assign the user token to the app'"`
-	ExcludeFiles      bool `json:"excludeFiles,omitempty" cliutil:"option=exclude-files usage='exclude attached files if --copy-data is passed'"`
-	KeepData          bool `json:"keepData,omitempty" cliutil:"option=keep-data usage='copy data'"`
-	KeepUsersAndRoles bool `json:"usersAndRoles,omitempty" cliutil:"option=keep-users-roles usage='copy users and roles'"`
+	AssignUserToken   bool `json:"assignUserToken,omitempty" cliutil:"option=assign-token"`
+	ExcludeFiles      bool `json:"excludeFiles,omitempty" cliutil:"option=exclude-files"`
+	KeepData          bool `json:"keepData,omitempty" cliutil:"option=keep-data"`
+	KeepUsersAndRoles bool `json:"usersAndRoles,omitempty" cliutil:"option=keep-users-roles"`
 }
 
 // CopyAppOutput models the output returned by POST /v1/apps/{appId}/copy.

@@ -188,5 +188,7 @@ func GetOptions(ctx context.Context, logger *cliutil.LeveledLogger, input interf
 		}
 	}
 
-	HandleError(ctx, logger, "input not valid", errors.New(strings.Join(msgs, ", ")))
+	if len(msgs) > 0 {
+		HandleError(ctx, logger, "input not valid", errors.New(strings.Join(msgs, ", ")))
+	}
 }

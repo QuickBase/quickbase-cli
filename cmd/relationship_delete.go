@@ -16,7 +16,7 @@ var relationshipDeleteCmd = &cobra.Command{
 
 	Args: func(cmd *cobra.Command, args []string) (err error) {
 		if err = globalCfg.Validate(); err == nil {
-			globalCfg.SetDefaultTableIDAs(relationshipDeleteCfg, "child-table-id")
+			globalCfg.SetDefaultTableIDs(relationshipDeleteCfg, "child-table-id")
 			qbcli.SetOptionFromArg(relationshipDeleteCfg, args, 0, "child-table-id")
 			qbcli.SetOptionFromArg(relationshipDeleteCfg, args, 1, qbclient.OptionRelationshipID)
 		}

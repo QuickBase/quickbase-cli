@@ -1,12 +1,19 @@
 package qbcli
 
 import (
+	"context"
+	"errors"
 	"fmt"
 	"reflect"
 	"strconv"
+	"strings"
 
 	"github.com/QuickBase/quickbase-cli/qbclient"
 	"github.com/cpliakas/cliutil"
+	"github.com/go-playground/locales/en"
+	ut "github.com/go-playground/universal-translator"
+	"github.com/go-playground/validator/v10"
+	en_translations "github.com/go-playground/validator/v10/translations/en"
 	"github.com/spf13/viper"
 )
 
@@ -147,6 +154,48 @@ func (opt *RecordOption) Read(cfg *viper.Viper, field reflect.Value) error {
 	r := []map[int]*qbclient.InsertRecordsInputData{record}
 	field.Set(reflect.ValueOf(r))
 	return nil
+}
+
+// GetOptions gets options based on the input and validates them.
+func GetOptions(ctx context.Context, logger *cliutil.LeveledLogger, input interface{}, cfg *viper.Viper) {
+	err := cliutil.GetOptions(input, cfg)
+	logger.FatalIfError(ctx, "error getting options", err)
+
+	validate := validator.New()
+
+	english := en.New()
+	uni := ut.New(english, english)
+	trans, _ := uni.GetTranslator("en")
+	_ = en_translations.RegisterDefaultTranslations(validate, trans)
+
+	// Custom translation for the "required" validator.
+	validate.RegisterTranslation("required", trans, func(ut ut.Translator) error {
+		return ut.Add("required", "{0} option is required", true)
+	}, func(ut ut.Translator, fe validator.FieldError) string {
+		// TODO We should be defensive, even if the error conditions shouldn't happen.
+		field, _ := reflect.ValueOf(input).Elem().Type().FieldByName(fe.Field())
+		tag := cliutil.ParseKeyValue(field.Tag.Get("cliutil"))
+		t, _ := ut.T("required", tag["option"])
+		return t
+	})
+
+	// Other validators we need to translate:
+	//
+	// - required_if (See Field.Label)
+	// - min (See DeleteFieldsInput.FieldID)
+
+	msgs := []string{}
+	verr := validate.Struct(input)
+	if verr != nil {
+		verrs := verr.(validator.ValidationErrors)
+		for _, ve := range verrs {
+			msgs = append(msgs, ve.Translate(trans))
+		}
+	}
+
+	if len(msgs) > 0 {
+		HandleError(ctx, logger, "input not valid", errors.New(strings.Join(msgs, ", ")))
+	}
 }
 
 func init() {

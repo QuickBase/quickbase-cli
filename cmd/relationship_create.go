@@ -16,7 +16,7 @@ var relationshipCreateCmd = &cobra.Command{
 
 	Args: func(cmd *cobra.Command, args []string) (err error) {
 		if err = globalCfg.Validate(); err == nil {
-			globalCfg.SetDefaultTableIDAs(relationshipCreateCfg, "child-table-id")
+			globalCfg.SetDefaultTableIDs(relationshipCreateCfg, "child-table-id")
 			qbcli.SetOptionFromArg(relationshipCreateCfg, args, 0, "child-table-id")
 			qbcli.SetOptionFromArg(relationshipCreateCfg, args, 1, "parent-table-id")
 		}

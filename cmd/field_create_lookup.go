@@ -16,7 +16,7 @@ var fieldCreateLookupCmd = &cobra.Command{
 
 	Args: func(cmd *cobra.Command, args []string) (err error) {
 		if err = globalCfg.Validate(); err == nil {
-			globalCfg.SetDefaultTableIDAs(fieldCreateLookupCfg, "child-table-id")
+			globalCfg.SetDefaultTableIDs(fieldCreateLookupCfg, "child-table-id")
 			qbcli.SetOptionFromArg(fieldCreateLookupCfg, args, 0, "child-table-id")
 			qbcli.SetOptionFromArg(fieldCreateLookupCfg, args, 1, qbclient.OptionRelationshipID)
 			qbcli.SetOptionFromArg(fieldCreateLookupCfg, args, 2, "lookup-field-ids")

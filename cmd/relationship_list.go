@@ -16,7 +16,7 @@ var relationshipListCmd = &cobra.Command{
 
 	Args: func(cmd *cobra.Command, args []string) (err error) {
 		if err = globalCfg.Validate(); err == nil {
-			globalCfg.SetDefaultTableIDAs(relationshipListCfg, "child-table-id")
+			globalCfg.SetDefaultTableIDs(relationshipListCfg, "child-table-id")
 			qbcli.SetOptionFromArg(relationshipListCfg, args, 0, "child-table-id")
 		}
 		return

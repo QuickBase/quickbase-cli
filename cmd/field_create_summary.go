@@ -16,7 +16,7 @@ var fieldCreateSummaryCmd = &cobra.Command{
 
 	Args: func(cmd *cobra.Command, args []string) (err error) {
 		if err = globalCfg.Validate(); err == nil {
-			globalCfg.SetDefaultTableIDAs(fieldCreateSummaryCfg, "child-table-id")
+			globalCfg.SetDefaultTableIDs(fieldCreateSummaryCfg, "child-table-id")
 			qbcli.SetOptionFromArg(fieldCreateSummaryCfg, args, 0, "child-table-id")
 			qbcli.SetOptionFromArg(fieldCreateSummaryCfg, args, 1, qbclient.OptionRelationshipID)
 		}

@@ -133,14 +133,6 @@ func (c GlobalConfig) SetDefaultTableIDs(cfg *viper.Viper, key string) {
 	}
 }
 
-// SetDefaultTableIDAs is an alias for SetDefaultTableIDs. There was a typo in
-// the function name, which resulted in this alias to the correctly named
-// function.
-// Deprecated: since v0.1.8
-func (c GlobalConfig) SetDefaultTableIDAs(cfg *viper.Viper, key string) {
-	c.SetDefaultTableIDs(cfg, key)
-}
-
 // SetOptionFromArg sets an option from an argument.
 func SetOptionFromArg(cfg *viper.Viper, args []string, idx int, option string) {
 	if len(args) > idx {

@@ -14,23 +14,21 @@ import (
 
 // Client makes requests to the Quick Base API.
 type Client struct {
-	HTTPClient     *http.Client
-	Plugins        []Plugin
-	ReamlHostname  string
-	TemporaryToken string
-	URL            string
-	UserAgent      string
-	UserToken      string
+	HTTPClient    *http.Client
+	Plugins       []Plugin
+	ReamlHostname string
+	URL           string
+	UserAgent     string
+	UserToken     string
 }
 
 // New returns a new Client.
 func New(cfg ConfigIface) *Client {
 	c := &Client{
-		ReamlHostname:  cfg.RealmHostname(),
-		TemporaryToken: cfg.TemporaryToken(),
-		URL:            "https://api.quickbase.com/v1",
-		UserAgent:      userAgent(),
-		UserToken:      cfg.UserToken(),
+		ReamlHostname: cfg.RealmHostname(),
+		URL:           "https://api.quickbase.com/v1",
+		UserAgent:     userAgent(),
+		UserToken:     cfg.UserToken(),
 	}
 
 	// Configure and set the retry handler.

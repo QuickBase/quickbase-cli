@@ -38,14 +38,8 @@ func addHeadersJSON(req *http.Request, c *Client) {
 	req.Header.Add("QB-Realm-Hostname", c.ReamlHostname)
 	req.Header.Add("User-Agent", c.UserAgent)
 
-	var authstr string
-	if c.TemporaryToken != "" {
-		authstr = fmt.Sprintf("QB-TEMP-TOKEN %s", c.TemporaryToken)
-	} else if c.UserToken != "" {
-		authstr = fmt.Sprintf("QB-USER-TOKEN %s", c.UserToken)
-	}
-	if authstr != "" {
-		req.Header.Add("Authorization", authstr)
+	if c.UserToken != "" {
+		req.Header.Add("Authorization", fmt.Sprintf("QB-USER-TOKEN %s", c.UserToken))
 	}
 }
 

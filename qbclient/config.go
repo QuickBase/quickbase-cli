@@ -25,7 +25,6 @@ const (
 	OptionRealmHostname  = "realm-hostname"
 	OptionRelationshipID = "relationship-id"
 	OptionTableID        = "table-id"
-	OptionTemporaryToken = "temp-token"
 	OptionUserToken      = "user-token"
 )
 
@@ -49,9 +48,6 @@ type ConfigIface interface {
 
 	// RealmHostname returns the configured realm hostname.
 	RealmHostname() string
-
-	// TemporaryToken returns the configured log level.
-	TemporaryToken() string
 
 	// UserToken returns the configured log level.
 	UserToken() string
@@ -85,9 +81,6 @@ func (c Config) Profile() string { return c.cfg.GetString(OptionProfile) }
 // RealmHostname returns the configured realm hostname.
 func (c Config) RealmHostname() string { return c.cfg.GetString(OptionRealmHostname) }
 
-// TemporaryToken returns the configured log level.
-func (c Config) TemporaryToken() string { return c.cfg.GetString(OptionTemporaryToken) }
-
 // UserToken returns the configured log level.
 func (c Config) UserToken() string { return c.cfg.GetString(OptionUserToken) }
 
@@ -118,7 +111,6 @@ func ReadInConfig(cfg *viper.Viper) error {
 	if config, ok := configFile[p]; ok {
 		cfg.SetDefault(OptionRealmHostname, config.RealmHostname)
 		cfg.SetDefault(OptionUserToken, config.UserToken)
-		cfg.SetDefault(OptionTemporaryToken, config.TemporaryToken)
 		cfg.SetDefault(OptionAppID, config.AppID)
 		cfg.SetDefault(OptionTableID, config.TableID)
 		cfg.SetDefault(OptionFieldID, config.FieldID)

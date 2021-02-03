@@ -41,7 +41,6 @@ func NewGlobalConfig(cmd *cobra.Command, cfg *viper.Viper) GlobalConfig {
 	flags.PersistentString(qbclient.OptionProfile, "p", "default", "configuration profile")
 	flags.PersistentBool(OptionQuiet, "q", false, OptionQuietDescription)
 	flags.PersistentString(qbclient.OptionRealmHostname, "r", "", "realm hostname, e.g., example.quickbase.com")
-	flags.PersistentString(qbclient.OptionTemporaryToken, "t", "", "temporary token used to authenticate API requests")
 	flags.PersistentString(qbclient.OptionUserToken, "u", "", "user token used to authenticate API requests")
 
 	return GlobalConfig{cfg: cfg}
@@ -87,9 +86,6 @@ func (c GlobalConfig) Quiet() bool { return c.cfg.GetBool(OptionQuiet) }
 
 // RealmHostname returns the configured realm hostname.
 func (c GlobalConfig) RealmHostname() string { return c.cfg.GetString(qbclient.OptionRealmHostname) }
-
-// TemporaryToken returns the configured log level.
-func (c GlobalConfig) TemporaryToken() string { return c.cfg.GetString(qbclient.OptionTemporaryToken) }
 
 // UserToken returns the configured log level.
 func (c GlobalConfig) UserToken() string { return c.cfg.GetString(qbclient.OptionUserToken) }

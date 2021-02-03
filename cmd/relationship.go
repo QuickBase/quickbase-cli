@@ -5,8 +5,9 @@ import (
 )
 
 var relationshipCmd = &cobra.Command{
-	Use:   "relationship",
-	Short: "Relationship resources",
+	Use:     "relationship",
+	Aliases: []string{"ship"},
+	Short:   "Relationship resources",
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()
 	},

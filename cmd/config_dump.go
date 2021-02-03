@@ -18,12 +18,11 @@ var configDumpCmd = &cobra.Command{
 		ctx, logger, _ := qbcli.NewLogger(cmd, globalCfg)
 
 		config := qbclient.ConfigFileProfile{
-			RealmHostname:  globalCfg.RealmHostname(),
-			UserToken:      qbclient.MaskUserTokenString(globalCfg.UserToken()),
-			TemporaryToken: qbclient.MaskUserTokenString(globalCfg.TemporaryToken()),
-			AppID:          globalCfg.DefaultAppID(),
-			TableID:        globalCfg.DefaultTableID(),
-			FieldID:        globalCfg.DefaultFieldID(),
+			RealmHostname: globalCfg.RealmHostname(),
+			UserToken:     qbclient.MaskUserTokenString(globalCfg.UserToken()),
+			AppID:         globalCfg.DefaultAppID(),
+			TableID:       globalCfg.DefaultTableID(),
+			FieldID:       globalCfg.DefaultFieldID(),
 		}
 
 		qbcli.Render(ctx, logger, cmd, globalCfg, config, nil)

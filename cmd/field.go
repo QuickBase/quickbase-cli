@@ -6,7 +6,7 @@ import (
 
 var fieldCmd = &cobra.Command{
 	Use:   "field",
-	Short: "Fields resources",
+	Short: "Field resources",
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()
 	},

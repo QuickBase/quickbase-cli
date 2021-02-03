@@ -162,7 +162,6 @@ func GetOptions(ctx context.Context, logger *cliutil.LeveledLogger, input interf
 	logger.FatalIfError(ctx, "error getting options", err)
 
 	validate := validator.New()
-
 	english := en.New()
 	uni := ut.New(english, english)
 	trans, _ := uni.GetTranslator("en")

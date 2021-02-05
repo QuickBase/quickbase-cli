@@ -39,10 +39,11 @@ func (o *InsertRecordsOutput) decode(body io.ReadCloser) error { return unmarsha
 
 // InsertRecordsOutputMetadata models the metadata property.
 type InsertRecordsOutputMetadata struct {
-	CreatedRecordIDs              []int `json:"createdRecordIds"`
-	TotalNumberOfRecordsProcessed int   `json:"totalNumberOfRecordsProcessed"`
-	UnchangedRecordIDs            []int `json:"unchangedRecordIds"`
-	UpdatedRecordIDs              []int `json:"updatedRecordIds"`
+	CreatedRecordIDs              []int               `json:"createdRecordIds"`
+	LineErrors                    map[string][]string `json:"lineErrors,omptempty"`
+	TotalNumberOfRecordsProcessed int                 `json:"totalNumberOfRecordsProcessed"`
+	UnchangedRecordIDs            []int               `json:"unchangedRecordIds"`
+	UpdatedRecordIDs              []int               `json:"updatedRecordIds"`
 }
 
 // InsertRecords sends a request to POST /v1/records.

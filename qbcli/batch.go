@@ -7,6 +7,7 @@ import (
 	"io"
 	"os"
 	"sort"
+	"strconv"
 	"time"
 
 	"github.com/QuickBase/quickbase-cli/qbclient"
@@ -128,6 +129,7 @@ type ImportOptions struct {
 func Import(qb *qbclient.Client, opts *ImportOptions) (*qbclient.InsertRecordsOutputMetadata, error) {
 	metadata := &qbclient.InsertRecordsOutputMetadata{
 		CreatedRecordIDs:              []int{},
+		LineErrors:                    map[string][]string{},
 		TotalNumberOfRecordsProcessed: 0,
 		UnchangedRecordIDs:            []int{},
 		UpdatedRecordIDs:              []int{},
@@ -247,12 +249,31 @@ func Import(qb *qbclient.Client, opts *ImportOptions) (*qbclient.InsertRecordsOu
 			}
 
 			// Empty the records for the next batch.
+			rlen := len(records)
 			records = []map[int]*qbclient.InsertRecordsInputData{}
 
 			metadata.CreatedRecordIDs = append(metadata.CreatedRecordIDs, iro.Metadata.CreatedRecordIDs...)
 			metadata.TotalNumberOfRecordsProcessed += iro.Metadata.TotalNumberOfRecordsProcessed
 			metadata.UnchangedRecordIDs = append(metadata.UnchangedRecordIDs, iro.Metadata.UnchangedRecordIDs...)
 			metadata.UpdatedRecordIDs = append(metadata.UpdatedRecordIDs, iro.Metadata.UpdatedRecordIDs...)
+
+			// Merging the line errors isn't so simple.
+			for k, v := range iro.Metadata.LineErrors {
+				n, err := strconv.Atoi(k)
+				if err != nil {
+					return metadata, fmt.Errorf("%s: expecting lineErrors key to be an integer", k)
+				}
+
+				// This works no matter the batch size, but I have no idea why
+				// we have to subtract 1 from n when eof is true. If this is
+				// buggy, blame cpliakas@quickbase.com.
+				n = line - rlen + n
+				if eof {
+					n--
+				}
+
+				metadata.LineErrors[strconv.Itoa(n)] = v
+			}
 
 			// Delay before the next API call.
 			if opts.Delay > 0 && !eof {

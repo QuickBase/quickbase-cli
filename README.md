@@ -32,14 +32,14 @@ The Quickbase CLI is an open source project supported by the community, and it d
 
 We recommend using [Homebrew](https://brew.sh/) to install the Quickbase CLI.
 
-```sh
+```
 brew tap quickbase/tap
 brew install quickbase-cli
 ```
 
 Verify the installation:
 
-```sh
+```
 quickbase-cli version
 ```
 
@@ -51,7 +51,7 @@ Download and extract the latest release for your platform from the [Releases](ht
 
 With a [correctly configured](https://golang.org/doc/install#install) Go toolchain, clone the repository to a directory of your choosing, change into it, and run `make`:
 
-```sh
+```
 git clone https://github.com/QuickBase/quickbase-cli.git
 cd ./quickbase-cli
 make
@@ -63,7 +63,7 @@ Run `make` in favor of `go build` because the version is set through linker flag
 
 Configuration is read from command-line options, environment variables, and a configuration file in that order of precedence. You are advised to set up a configuration file using the command below, which will prompt for your realm hostname, user token, and an optional application ID.
 
-```sh
+```
 quickbase-cli config setup
 ```
 
@@ -84,8 +84,11 @@ The `default` profile is used unless the `QUICKBASE_PROFILE` environment variabl
 
 Run the following command to dump the configuration values for the active profile:
 
-```sh
+```
 quickbase-cli config dump
+```
+
+```json
 {
     "realm_hostname": "example1.quickbase.com",
     "user_token": "b3b6se_mzif_dy36********************hi7b",
@@ -110,7 +113,7 @@ quickbase-cli records delete --where '6="Another Record"'
 
 Commands follow the traditional `APP COMMANDS ARGS --FLAGS` pattern. See the exmaple command below that gets an app definition:
 
-```sh
+```
 quickbase-cli app get --app-id bqgruir3g
 ```
 
@@ -135,7 +138,7 @@ quickbase-cli app get --app-id bqgruir3g
 
 Example command that queries for records, returning fields 6 throguh 8 where Record #ID equals 2:
 
-```sh
+```
 quickbase-cli records query --select 6,7,8 --from bqgruir7z --where '{3.EX.2}'
 ```
 
@@ -191,13 +194,13 @@ In the examples above, `--select 6:8` is equivalent to `--select 6,7,8`. You can
 
 You can also use simplified query syntax for basic queries. The following command queries for records where field 6 equals "Record One" and field 7 equals 2:
 
-```sh
+```
 quickbase-cli records query --select 6:8 --from bqgruir7z --where '6="Record Two" 7=2'
 ```
 
 Just passing a number will find a record by its ID:
 
-```sh
+```
 quickbase-cli records query --select 6:8 --from bqgruir7z --where 2
 ```
 
@@ -219,7 +222,7 @@ Other valid options for `--format` are `csv`, `markdown`.
 
 Example command that creates a record where field 6 equals "Another Record" and field 7 equals 3:
 
-```sh
+```
 quickbase-cli records insert --to bqgruir7z --data '6="Another Record" 7=3'
 ```
 
@@ -240,7 +243,7 @@ quickbase-cli records insert --to bqgruir7z --data '6="Another Record" 7=3'
 
 Example commands that export data from one table and import it into another that has a similar structure:
 
-```sh
+```
 quickbase-cli table export bq67er5pj | quickbase-cli table import bq72kz6p8
 ```
 
@@ -250,7 +253,7 @@ Use the import command's `--map` option to reconcile field label differences bet
 
 Example commmand that deletes the record created above:
 
-```sh
+```
 quickbase-cli records delete --from bqgruir7z --where '6="Another Record"'
 ```
 
@@ -264,7 +267,7 @@ quickbase-cli records delete --from bqgruir7z --where '6="Another Record"'
 
 Example commmand that creates a relationship:
 
-```sh
+```
 quickbase-cli relationship create --child-table-id bqgruir7z --parent-table-id bq6qbvfbv --lookup-field-ids 6,7
 ```
 
@@ -297,13 +300,13 @@ quickbase-cli relationship create --child-table-id bqgruir7z --parent-table-id b
 
 Example command that runs a formula:
 
-```sh
+```
 quickbase-cli formula run bck7gp3q2 1 --formula "Sum([NumericField],20)"
 ```
 
 Formulas can span multiple lines and get pretty large. In this instance, you can pass the formula via `STDIN` to this command. The following example assumes the `formula.qb` file contains a large formula:
 
-```sh
+```
 cat ./formula.qb | quickbase-cli formula run bck7gp3q2 1
 ```
 
@@ -311,7 +314,7 @@ cat ./formula.qb | quickbase-cli formula run bck7gp3q2 1
 
 [JMESPath](https://jmespath.org/) is a powerful query language for JSON. You can apply JMESPath filters to transform the output of commands to make the data easier to work with. For example, let say you want to get only a list of table names in an app sorted alphabetically. To accomplish this, you can apply a JMESPath filter using the `--filter` option to the command below:
 
-```sh
+```
 quickbase-cli table list --app-id bqgruir3g --filter "tables[].name | sort(@) | {Tables: join(', ', @)}"
 ```
 

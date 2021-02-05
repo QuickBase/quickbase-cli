@@ -236,6 +236,16 @@ quickbase-cli records insert --to bqgruir7z --data '6="Another Record" 7=3'
 }
 ```
 
+### Importing / Exporting Records
+
+Example commands that export data from one table and import it into another that has a similar structure:
+
+```sh
+quickbase-cli table export bq67er5pj | quickbase-cli table import bq72kz6p8
+```
+
+Use the import command's `--map` option to reconcile field label differences between the tables. The import/export commands batch the reads and writes by default. Set the `--batch-size` option to control the number of records in the batch. You can also set the `--delay` option to pause between batches, which can help when processing large amounts of data in an active app.
+
 ### Deleting Records
 
 Example commmand that deletes the record created above:
@@ -281,6 +291,20 @@ quickbase-cli relationship create --child-table-id bqgruir7z --parent-table-id b
     "id": 9,
     "parentTableId": "bq6qbvfbv"
 }
+```
+
+### Running Formulas
+
+Example command that runs a formula:
+
+```sh
+quickbase-cli formula run bck7gp3q2 1 --formula "Sum([NumericField],20)"
+```
+
+Formulas can span multiple lines and get pretty large. In this instance, you can pass the formula via `STDIN` to this command. The following example assumes the `formula.qb` file contains a large formula:
+
+```sh
+cat ./formula.qb | quickbase-cli formula run bck7gp3q2 1
 ```
 
 ### Transforming Output

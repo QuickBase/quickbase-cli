@@ -26,7 +26,7 @@ var recordsInsertCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		ctx, logger, qb := qbcli.NewClient(cmd, globalCfg)
 
-		err := qbcli.SetFieldTypeMap(qb, recordsInsertCfg.GetString("to"))
+		err := qbcli.CacheTableSchema(qb, recordsInsertCfg.GetString("to"))
 		qbcli.HandleError(ctx, logger, "error setting field type map", err)
 
 		input := &qbclient.InsertRecordsInput{}

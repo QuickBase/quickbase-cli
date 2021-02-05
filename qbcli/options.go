@@ -115,9 +115,9 @@ func (opt *RecordOption) Set(f *cliutil.Flagger) error {
 // Read implements cliutil.OptionType.Read.
 func (opt *RecordOption) Read(cfg *viper.Viper, field reflect.Value) error {
 
-	// Get the table's field type map.
+	// Get the cached table schema.
 	// TODO Do we need to remove the hard-coding to "to"?
-	m, err := GetFieldTypeMap(cfg.GetString("to"))
+	m, err := GetCachedTableSchema(cfg.GetString("to"))
 	if err != nil {
 		return err
 	}
@@ -135,13 +135,13 @@ func (opt *RecordOption) Read(cfg *viper.Viper, field reflect.Value) error {
 		}
 
 		// Get the field type from the table's field type map.
-		ft, ok := m[fid]
+		field, ok := m[fid]
 		if !ok {
 			return fmt.Errorf("field %v not defined in table", fid)
 		}
 
 		// Create a *qbclient.Value from the string value and field type.
-		val, err := qbclient.NewValueFromString(v, ft)
+		val, err := qbclient.NewValueFromString(v, field.Type)
 		if err != nil {
 			return fmt.Errorf("value invalid for field %v: %w", fid, err)
 		}
@@ -204,13 +204,16 @@ func init() {
 	cliutil.RegisterOptionTypeFunc("group", NewGroupOption)
 
 	cliutil.SetOptionMetadata("app-id", map[string]string{"usage": "the app's unique identifier, e.g., bqgruir3g"})
+	cliutil.SetOptionMetadata("batch-size", map[string]string{"usage": "the number of rows processed in each batch"})
 	cliutil.SetOptionMetadata("child-table-id", map[string]string{"usage": "the child table's unique identifier, e.g., bqgruir7z"})
 	cliutil.SetOptionMetadata("data", map[string]string{"usage": "the record data in key=value format, e.g., '6=\"Another Record\" 7=3'"})
+	cliutil.SetOptionMetadata("delay", map[string]string{"usage": "delay between batches in milliseconds"})
 	cliutil.SetOptionMetadata("field-id", map[string]string{"usage": "the fields's unique identifier, e.g., 6"})
 	cliutil.SetOptionMetadata("fields-to-return", map[string]string{"usage": "the list/range of fields to return, e.g., 6,7,10:15"})
 	cliutil.SetOptionMetadata("from", map[string]string{"usage": "the table's unique identifier, e.g., bqgruir7z"})
 	cliutil.SetOptionMetadata("group-by", map[string]string{"usage": "group records by fields, e.g., '6 DESC,7 ASC,8 equal-values'"})
 	cliutil.SetOptionMetadata("lookup-field-ids", map[string]string{"usage": "the list/range of fids for lookup fields to create, e.g., 6,7,10:15"})
+	cliutil.SetOptionMetadata("map", map[string]string{"usage": "map csv header labels to destination table field labels, e.g., \"'Old Label 1'='New Label 1' 'Old Label 2'='New Label 2'\""})
 	cliutil.SetOptionMetadata("parent-table-id", map[string]string{"usage": "the parent table's unique identifier, e.g., bqgruir6f"})
 	cliutil.SetOptionMetadata("relationship-id", map[string]string{"usage": "the relationship's unique identifier, e.g., 10"})
 	cliutil.SetOptionMetadata("report-id", map[string]string{"usage": "the report's unique identifier, e.g., 1"})

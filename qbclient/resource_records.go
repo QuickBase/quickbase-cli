@@ -42,7 +42,7 @@ type InsertRecordsOutputMetadata struct {
 	CreatedRecordIDs              []int `json:"createdRecordIds"`
 	TotalNumberOfRecordsProcessed int   `json:"totalNumberOfRecordsProcessed"`
 	UnchangedRecordIDs            []int `json:"unchangedRecordIds"`
-	IpdatedRecordIDs              []int `json:"updatedRecordIds"`
+	UpdatedRecordIDs              []int `json:"updatedRecordIds"`
 }
 
 // InsertRecords sends a request to POST /v1/records.

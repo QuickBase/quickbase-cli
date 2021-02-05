@@ -209,6 +209,11 @@ func NewRecordIDValue(val float64) *Value {
 	return &Value{Float64: val, QuickBaseType: FieldRecordID}
 }
 
+// NewRecordIDValueFromString returns a new Value of the FieldRecordID type.
+func NewRecordIDValueFromString(val string) (*Value, error) {
+	return parseStringToNumericValue(val, FieldRecordID)
+}
+
 // NewTextValue returns a new Value of the FieldText type.
 func NewTextValue(val string) *Value {
 	return &Value{Str: val, QuickBaseType: FieldText}
@@ -490,6 +495,9 @@ func parseStringToNumericValue(val, ftype string) (v *Value, err error) {
 // field type.
 func NewValueFromString(val, ftype string) (v *Value, err error) {
 	switch ftype {
+
+	case FieldRecordID:
+		v, err = NewRecordIDValueFromString(val)
 
 	case FieldText:
 		// Also picks up:

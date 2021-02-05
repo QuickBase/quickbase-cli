@@ -4,7 +4,7 @@ go 1.15
 
 require (
 	github.com/araddon/dateparse v0.0.0-20201001162425-8aadafed4dc4
-	github.com/cpliakas/cliutil v0.2.3
+	github.com/cpliakas/cliutil v0.2.4
 	github.com/go-playground/locales v0.13.0
 	github.com/go-playground/universal-translator v0.17.0
 	github.com/go-playground/validator/v10 v10.4.1

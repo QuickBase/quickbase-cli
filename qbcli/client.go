@@ -44,37 +44,50 @@ func NewClient(cmd *cobra.Command, cfg GlobalConfig) (ctx context.Context, logge
 	return
 }
 
-var tmap map[string]map[int]string
+// FieldMap is a map of field IDs to field definitions.
+type FieldMap map[int]*qbclient.ListFieldsOutputField
 
-// SetFieldTypeMap sets the field type map for a table.
-func SetFieldTypeMap(qb *qbclient.Client, tableID string) error {
+var _fmap map[string]FieldMap
+
+// CacheTableSchema caches schema information for a table.
+func CacheTableSchema(qb *qbclient.Client, tableID string) error {
 	output, err := qb.ListFieldsByTableID(tableID)
 	if err != nil {
 		return err
 	}
 
-	m := make(map[int]string, len(output.Fields))
+	m := make(FieldMap, len(output.Fields))
 	for _, field := range output.Fields {
-		m[field.FieldID] = field.Type
+		m[field.FieldID] = field
 	}
 
-	tmap[tableID] = m
+	_fmap[tableID] = m
 	return nil
 }
 
-// GetFieldTypeMap returns a mapping of field IDs to Quickbase field type for
-// all the fields in a table.
-//
-// TODO Caching?
-func GetFieldTypeMap(tableID string) (map[int]string, error) {
-	m, ok := tmap[tableID]
+// GetTableSchema returns schema information for a table. If the schema is not
+// in the in-memory cache, it retrieves the data and caches it.
+func GetTableSchema(qb *qbclient.Client, tableID string) (FieldMap, error) {
+	var err error
+	_, ok := _fmap[tableID]
 	if !ok {
-		err := errors.New("field type map not set")
-		return map[int]string{}, fmt.Errorf("table %s: %w", tableID, err)
+		err = CacheTableSchema(qb, tableID)
+	}
+	return _fmap[tableID], err
+}
+
+// GetCachedTableSchema returns schema information for a table.
+//
+// TODO Caching beyond in-memory caching?
+func GetCachedTableSchema(tableID string) (FieldMap, error) {
+	m, ok := _fmap[tableID]
+	if !ok {
+		err := errors.New("field metadata not set")
+		return FieldMap{}, fmt.Errorf("table %s: %w", tableID, err)
 	}
 	return m, nil
 }
 
 func init() {
-	tmap = make(map[string]map[int]string, 0)
+	_fmap = make(map[string]FieldMap, 0)
 }

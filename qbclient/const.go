@@ -26,7 +26,7 @@ const (
 	FieldAddressCountry     = "text"
 	FieldPhoneNumber        = "phone"
 	FieldEmailAddress       = "email"
-	FieldUser               = "userid"
+	FieldUser               = "user"
 	FieldUserList           = "multiuserid"
 	FieldFileAttachment     = "file"
 	FieldURL                = "url"

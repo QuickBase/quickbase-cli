@@ -39,7 +39,7 @@ type ListAppsOutputDatabases struct {
 	AncestorAppID       string `xml:"ancestorappid,omitempty" json:"ancestorAppId,omitempty"`
 	ID                  string `xml:"dbid" json:"appId"`
 	Name                string `xml:"dbname" json:"name"`
-	OldestAncestorAppID string `xml:"oldestancestorappid,omitempty"  json:"oldAncestorAppId,omitempty"`
+	OldestAncestorAppID string `xml:"oldestancestorappid,omitempty" json:"oldAncestorAppId,omitempty"`
 }
 
 func (o *ListAppsOutput) decode(body io.ReadCloser) error { return unmarshalXML(body, o) }

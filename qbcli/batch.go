@@ -124,7 +124,7 @@ type ImportOptions struct {
 	// Fields    []int  `cliutil:"option=fields"`
 }
 
-// Import imports data from an io.Reader ito a Quickbase table.
+// Import imports data from an io.Reader into a Quickbase table.
 func Import(qb *qbclient.Client, opts *ImportOptions) (*qbclient.InsertRecordsOutputMetadata, error) {
 	metadata := &qbclient.InsertRecordsOutputMetadata{
 		CreatedRecordIDs:              []int{},
@@ -233,7 +233,7 @@ func Import(qb *qbclient.Client, opts *ImportOptions) (*qbclient.InsertRecordsOu
 			}
 		}
 
-		// Write the batch.
+		// Write the batch if we hit the batch size of the end of the data set.
 		if len(records) >= opts.BatchSize || (len(records) > 0 && eof) {
 			input := &qbclient.InsertRecordsInput{
 				To:           opts.TableID,

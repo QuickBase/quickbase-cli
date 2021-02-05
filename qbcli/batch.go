@@ -253,6 +253,11 @@ func Import(qb *qbclient.Client, opts *ImportOptions) (*qbclient.InsertRecordsOu
 			metadata.TotalNumberOfRecordsProcessed += iro.Metadata.TotalNumberOfRecordsProcessed
 			metadata.UnchangedRecordIDs = append(metadata.UnchangedRecordIDs, iro.Metadata.UnchangedRecordIDs...)
 			metadata.UpdatedRecordIDs = append(metadata.UpdatedRecordIDs, iro.Metadata.UpdatedRecordIDs...)
+
+			// Delay before the next API call.
+			if opts.Delay > 0 && !eof {
+				time.Sleep(time.Duration(opts.Delay) * time.Millisecond)
+			}
 		}
 
 		// Break if we are at the end of the file.

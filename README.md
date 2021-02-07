@@ -247,7 +247,7 @@ Example commands that export data from one table and import it into another that
 quickbase-cli table export bq67er5pj | quickbase-cli table import bq72kz6p8
 ```
 
-Use the import command's `--map` option to reconcile field label differences between the tables. The import/export commands batch the reads and writes by default. Set the `--batch-size` option to control the number of records in the batch. You can also set the `--delay` option to pause between batches, which can help when processing large amounts of data in an active app.
+Use the import command's `--map` option to reconcile field label differences between the tables. The import/export commands batch the reads and writes by default. Set the `--batch-size` option to control the number of records in each batch. You can also set the `--delay` option to pause between batches, which can help when processing large amounts of data in an active app.
 
 ### Deleting Records
 

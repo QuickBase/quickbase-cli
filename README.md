@@ -45,7 +45,11 @@ quickbase-cli version
 
 ### Windows
 
-Download and extract the latest release for Windows from the [Releases](https://github.com/QuickBase/quickbase-cli/releases) section. You will likely need a tool like [7-Zip](https://www.7-zip.org/) to extract the compressed archive. Refer to [this blog post](https://medium.com/@kevinmarkvi/how-to-add-executables-to-your-path-in-windows-5ffa4ce61a53) to ensure the Quickbase CLI binary is in your system's PATH to make it easier to run the tool.
+Download and extract the latest release for Windows from the [Releases](https://github.com/QuickBase/quickbase-cli/releases) section. Use the file that ends in `Windows_x86_64.tar.gz` if you have a 64-bit machine or `Windows_i386.tar.gz` if you have a 32-bit machine. Refer to [this support article](https://support.microsoft.com/en-us/windows/32-bit-and-64-bit-windows-frequently-asked-questions-c6ca9541-8dce-4d48-0415-94a3faa2e13d) for instruction on how to determine your machine's architecture.
+
+You will likely need a tool like [7-Zip](https://www.7-zip.org/) to extract the compressed archive.
+
+Refer to [this blog post](https://medium.com/@kevinmarkvi/how-to-add-executables-to-your-path-in-windows-5ffa4ce61a53) to ensure the Quickbase CLI binary is in your system's PATH to make it easier to run the tool.
 
 ### All Platforms
 

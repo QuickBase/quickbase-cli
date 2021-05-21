@@ -26,8 +26,8 @@ type Field struct {
 
 	// Advanced
 	AutoFill        bool   `json:"doesDataCopy,omitempty" cliutil:"option=auto-fill"`
-	Searchable      bool   `json:"findEnabled" cliutil:"option=searchable"`          // Defaults to true, so we cannot omitempty.
-	AddToNewReports bool   `json:"appearsByDefault" cliutil:"option=add-to-reports"` // Defaults to true, so we cannot omitempty.
+	Searchable      bool   `json:"findEnabled" cliutil:"option=searchable default=true func=boolstring"`
+	AddToNewReports bool   `json:"appearsByDefault" cliutil:"option=add-to-reports default=true func=boolstring"`
 	FieldHelpText   string `json:"fieldHelp,omitempty" cliutil:"option=help-text"`
 	TrackField      bool   `json:"audited,omitempty" cliutil:"option=track-field"`
 

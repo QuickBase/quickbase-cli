@@ -15,7 +15,7 @@ type Field struct {
 	Create bool `json:"-"`
 
 	// Basics
-	Label    string `json:"label,omitempty" validate:"required" cliutil:"option=label"`
+	Label    string `json:"label,omitempty" validate:"required_if=Create true" cliutil:"option=label"`
 	Type     string `json:"fieldType,omitempty" validate:"required_if=Create true" cliutil:"option=type"`
 	Required bool   `json:"required,omitempty" cliutil:"option=required"`
 	Unique   bool   `json:"unique,omitempty" cliutil:"option=unique"`

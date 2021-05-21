@@ -219,7 +219,7 @@ type ReportPropertiesSortBy struct {
 // ReportPropertiesCategories models the categories object.
 type ReportPropertiesCategories struct {
 	FieldID  int    `json:"fieldId,omitempty"`
-	Label    string `json:"label,label"`
+	Label    string `json:"label,omitempty"`
 	Grouping string `json:"grouping,omitempty"`
 }
 

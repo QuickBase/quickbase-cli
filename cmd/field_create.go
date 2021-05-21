@@ -28,6 +28,11 @@ var fieldCreateCmd = &cobra.Command{
 		input := &qbclient.CreateFieldInput{Properties: &qbclient.CreateFieldInputProperties{}}
 		qbcli.GetOptions(ctx, logger, input, fieldCreateCfg)
 
+		// Set the formula from the contents for a file.
+		if input.Properties.FormulaFile != "" {
+			input.Properties.Formula = input.Properties.FormulaFile
+		}
+
 		output, err := qb.CreateField(input)
 		qbcli.Render(ctx, logger, cmd, globalCfg, output, err)
 	},

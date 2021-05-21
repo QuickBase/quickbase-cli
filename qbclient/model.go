@@ -56,6 +56,7 @@ type FieldProperties struct {
 	ExactMatch   bool   `json:"exact,omitempty" cliutil:"option=exact-match"`
 	ForeignKey   bool   `json:"foreignKey,omitempty" cliutil:"option=foreign-key"`
 	Formula      string `json:"formula,omitempty" cliutil:"option=formula"`
+	FormulaFile  string `json:"-" cliutil:"option=formula-file func=ioreader"`
 	ParentTable  string `json:"masterTableTag,omitempty" cliutil:"option=parent-table"`
 	PrimaryKey   bool   `json:"primaryKey,omitempty" cliutil:"option=primary-key"`
 	RelatedField int    `json:"targetFieldId,omitempty" cliutil:"option=related-field"`

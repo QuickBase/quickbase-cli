@@ -29,6 +29,11 @@ var fieldUpdateCmd = &cobra.Command{
 		input := &qbclient.UpdateFieldInput{Properties: &qbclient.UpdateFieldInputProperties{}}
 		qbcli.GetOptions(ctx, logger, input, fieldUpdateCfg)
 
+		// Set the formula from the contents for a file.
+		if input.Properties.FormulaFile != "" {
+			input.Properties.Formula = input.Properties.FormulaFile
+		}
+
 		output, err := qb.UpdateField(input)
 		qbcli.Render(ctx, logger, cmd, globalCfg, output, err)
 	},

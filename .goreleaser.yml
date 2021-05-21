@@ -58,5 +58,6 @@ nfpms:
     license: MIT
     vendor: Quickbase
     formats:
+    - apk
     - deb
     - rpm

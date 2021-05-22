@@ -11,8 +11,6 @@ builds:
       - darwin
     ldflags:
      - -s -w -X github.com/QuickBase/quickbase-cli/qbclient.Version={{.Version}}
-    hooks:
-      # post: upx -qqq -9 {{ .Path }}
 
 archives:
   - replacements:

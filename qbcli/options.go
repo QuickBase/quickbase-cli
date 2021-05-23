@@ -158,7 +158,7 @@ func (opt *RecordOption) Read(cfg *viper.Viper, field reflect.Value) error {
 
 // GetOptions gets options based on the input and validates them.
 func GetOptions(ctx context.Context, logger *cliutil.LeveledLogger, input interface{}, cfg *viper.Viper) {
-	err := cliutil.GetOptions(input, cfg)
+	err := cliutil.ReadOptions(input, cfg)
 	logger.FatalIfError(ctx, "error getting options", err)
 
 	validate := validator.New()

@@ -63,9 +63,8 @@ func renderTable(a interface{}, format string) error {
 
 		// Look for the embedded Report field.
 		i := rvf.Interface()
-		switch i.(type) {
+		switch r := i.(type) {
 		case qbclient.Records:
-			r := i.(qbclient.Records)
 
 			// map of field ids to index position in the table.
 			fmap := make(map[int]int, len(r.Fields))

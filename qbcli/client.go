@@ -89,5 +89,5 @@ func GetCachedTableSchema(tableID string) (FieldMap, error) {
 }
 
 func init() {
-	_fmap = make(map[string]FieldMap, 0)
+	_fmap = make(map[string]FieldMap)
 }

@@ -154,7 +154,7 @@ func (p DumpPlugin) openDumpFile(op string) (ctx context.Context, file *os.File,
 	filepath := qbclient.Filepath(p.directory, filename)
 
 	ctx = cliutil.ContextWithLogTag(p.ctx, "file", filepath)
-	ctx = cliutil.ContextWithLogTag(p.ctx, "operation", op)
+	ctx = cliutil.ContextWithLogTag(ctx, "operation", op)
 
 	file, err = os.OpenFile(filepath, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0644)
 	if err == nil {

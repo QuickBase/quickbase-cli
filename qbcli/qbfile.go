@@ -11,8 +11,21 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+// QuickbaseFile models a quickbase.yml file.
 type QuickbaseFile struct {
+	Test   *QuickbaseFileTest   `yaml:"test"`
 	Deploy *QuickbaseFileDeploy `yaml:"deploy"`
+}
+
+type QuickbaseFileTest struct {
+	Formulas []*QuickbaseFileTestFormula `yaml:"formulas"`
+}
+
+type QuickbaseFileTestFormula struct {
+	File     string `validate:"required" yaml:"file"`
+	TableID  string `validate:"required" yaml:"table_id"`
+	RecordID int    `validate:"required" yaml:"record_id"`
+	Expected string `validate:"required" yaml:"expected"`
 }
 
 type QuickbaseFileDeploy struct {
@@ -28,18 +41,74 @@ type QuickbaseFileDeployFormula struct {
 func ParseQuickbaseFile(file string) (f *QuickbaseFile, err error) {
 	f = &QuickbaseFile{}
 
+	// Read the quickbase.yml file.
 	b, err := ioutil.ReadFile(file)
 	if err != nil {
-		err = fmt.Errorf("error reading quickbase file: %w", err)
+		err = qberrors.Client(nil).Safef(qberrors.InvalidInput, "error reading quickbase file: %w", err)
 		return
 	}
 
+	// Parse the yaml file using strict settings.
 	dec := yaml.NewDecoder(bytes.NewBuffer(b))
 	dec.KnownFields(true)
-	err = dec.Decode(f)
+	derr := dec.Decode(f)
+	if derr != nil {
+		err = qberrors.Client(nil).Safef(qberrors.InvalidSyntax, "yaml not valid: %w", derr)
+	}
 
-	if verr := validator.New().Struct(f); err != nil {
+	// Validate the decoded file.
+	if verr := validator.New().Struct(f); verr != nil {
 		err = qberrors.HandleErrorValidation(verr)
+	}
+
+	return
+}
+
+type TestFormulaInput struct {
+	File string `cliutil:"option=file default=quickbase.yml"`
+}
+
+type TestFormulaOutput struct {
+	Passed []int          `json:"passed"`
+	Failed map[int]string `json:"failed"`
+}
+
+func TestFormula(qb *qbclient.Client, in *TestFormulaInput) (out *TestFormulaOutput, err error) {
+	out = &TestFormulaOutput{
+		Passed: []int{},
+		Failed: map[int]string{},
+	}
+
+	var file *QuickbaseFile
+	file, err = ParseQuickbaseFile(in.File)
+	if err != nil {
+		return
+	}
+
+	for idx, f := range file.Test.Formulas {
+
+		b, ferr := ioutil.ReadFile(f.File)
+		if ferr != nil {
+			err = qberrors.Client(nil).Safef(qberrors.InvalidInput, "error reading formula file: %w", ferr)
+			return
+		}
+
+		rfi := &qbclient.RunFormulaInput{
+			From:     f.TableID,
+			RecordID: f.RecordID,
+			Formula:  string(b),
+		}
+
+		rfo, rerr := qb.RunFormula(rfi)
+		if rerr == nil {
+			if f.Expected == rfo.Result {
+				out.Passed = append(out.Passed, idx)
+			} else {
+				out.Failed[idx] = fmt.Sprintf("expected %q, got %q", f.Expected, rfo.Result)
+			}
+		} else {
+			out.Failed[idx] = rerr.Error()
+		}
 	}
 
 	return
@@ -70,7 +139,7 @@ func DeployFormula(qb *qbclient.Client, in *DeployFormulaInput) (out *DeployForm
 
 		b, ferr := ioutil.ReadFile(f.File)
 		if ferr != nil {
-			err = fmt.Errorf("error reading formula file: %w", ferr)
+			err = qberrors.Client(nil).Safef(qberrors.InvalidInput, "error reading formula file: %w", ferr)
 			return
 		}
 

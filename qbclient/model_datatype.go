@@ -448,7 +448,7 @@ func NewURLValue(val *url.URL) *Value {
 // NewURLValueFromString returns a new Value of the FieldURL type.
 func NewURLValueFromString(val string) (v *Value, err error) {
 	var u *url.URL
-	if u, err = url.Parse(val); err != nil {
+	if u, err = url.Parse(val); err == nil {
 		v = &Value{URL: u, QuickBaseType: FieldURL}
 	}
 	return
